@@ -17,9 +17,6 @@ public final class Constants {
     public static final int Flywheelintake = 1;
     public static final int CoralIntakeRPM = 10;
     
-  }{
-  
-    
   }
 
   public static class OperatorConstants {

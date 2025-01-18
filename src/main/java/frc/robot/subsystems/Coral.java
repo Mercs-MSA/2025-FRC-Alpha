@@ -5,14 +5,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 
 import frc.robot.Constants;
-import frc.robot.Constants.MotorConstants;;
 
 public class Coral extends SubsystemBase {
-    private final TalonFX m_main = new TalonFX(MotorConstants.Flywheelintake, "canivore");
+    private final TalonFX m_main = new TalonFX(Constants.MotorConstants.Flywheelintake, "canivore");
     private final VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0).withSlot(0);
+    private final VelocityTorqueCurrentFOC m_VelocityTorque = new VelocityTorqueCurrentFOC(0).withSlot(0);
+    private final NeutralOut m_brake = new NeutralOut();
 
     public Coral() {
          TalonFXConfiguration configs = new TalonFXConfiguration();
@@ -43,20 +46,34 @@ public class Coral extends SubsystemBase {
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
-      System.out.println("Could not apply configs, error code: " + status.toString());
+        System.out.println("Could not apply configs, error code: " + status.toString());
     }
     }
 
 
-    public void CoralIn() {
-        m_main.setControl(m_VelocityVoltage.withVelocity(MotorConstants.CoralIntakeRPM));
+    public void CoralIn(boolean onoff) {
+        int rpm;
+        if (onoff == true) {
+            rpm = Constants.MotorConstants.CoralIntakeRPM;
+        } else {
+            rpm = 0;
+        }
+        m_main.setControl(m_VelocityVoltage.withVelocity(rpm));
+        m_main.setControl(m_VelocityTorque.withVelocity(rpm));
     }
 
-    public void CoralOut() {
-
+    public void CoralOut(boolean onoff) {
+        int rpm;
+        if (onoff == true) {
+            rpm = Constants.MotorConstants.CoralIntakeRPM;
+        } else {
+            rpm = 0;
+        }
+        m_main.setControl(m_VelocityVoltage.withVelocity(rpm*-1));
+        m_main.setControl(m_VelocityTorque.withVelocity(rpm*-1));
     }
 
     public void CoralBrake() {
-
+        m_main.setControl(m_brake);
     }
 }
