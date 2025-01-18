@@ -51,27 +51,27 @@ public class Coral extends SubsystemBase {
     }
 
 
-    public void CoralIn(boolean onoff) {
+    public void CoralIn(boolean onoff, int state) {
         int rpm;
         if (onoff == true) {
             rpm = Constants.MotorConstants.CoralIntakeRPM;
         } else {
             rpm = 0;
         }
-        m_main.setControl(m_VelocityVoltage.withVelocity(rpm));
-        m_main.setControl(m_VelocityTorque.withVelocity(rpm));
+        m_main.setControl(m_VelocityVoltage.withVelocity(rpm*state));
+        m_main.setControl(m_VelocityTorque.withVelocity(rpm*state));
     }
 
-    public void CoralOut(boolean onoff) {
-        int rpm;
-        if (onoff == true) {
-            rpm = Constants.MotorConstants.CoralIntakeRPM;
-        } else {
-            rpm = 0;
-        }
-        m_main.setControl(m_VelocityVoltage.withVelocity(rpm*-1));
-        m_main.setControl(m_VelocityTorque.withVelocity(rpm*-1));
-    }
+    // public void CoralOut(boolean onoff) {
+    //     int rpm;
+    //     if (onoff == true) {
+    //         rpm = Constants.MotorConstants.CoralIntakeRPM;
+    //     } else {
+    //         rpm = 0;
+    //     }
+    //     m_main.setControl(m_VelocityVoltage.withVelocity(rpm*-1));
+    //     m_main.setControl(m_VelocityTorque.withVelocity(rpm*-1));
+    // }
 
     public void CoralBrake() {
         m_main.setControl(m_brake);

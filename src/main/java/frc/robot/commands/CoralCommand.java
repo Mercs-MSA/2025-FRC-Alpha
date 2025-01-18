@@ -11,14 +11,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class CoralCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Coral m_coral;
-
+  private final int inout;
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CoralCommand(Coral subsystem) {
+  public CoralCommand(Coral subsystem, int state) {
     m_coral = subsystem;
+    inout = state;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -32,13 +33,13 @@ public class CoralCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_coral.CoralIn(true);
+    m_coral.CoralIn(true, inout);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_coral.CoralIn(false);
+    m_coral.CoralIn(false, 0);
   }
 
   // Returns true when the command should end.
