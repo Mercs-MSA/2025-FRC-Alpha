@@ -27,6 +27,7 @@ public class FlipIntakeCommand extends Command {
   @Override
   public void initialize() 
   {
+    m_CoralIntake.getIntakeState();
     m_CoralIntake.flipIntake();
 
 
@@ -34,15 +35,24 @@ public class FlipIntakeCommand extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
-
+  public void end(boolean interrupted) {
+    m_CoralIntake.endFlip();
+    m_CoralIntake.flipMotorPos=m_CoralIntake.flipMotor.getPosition().getValueAsDouble();
+  }
+//
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(m_CoralIntake.getIntakeState()==1 || m_CoralIntake.getIntakeState()==2)
+    {
+      return true;
+    }
     return false;
   }
 }

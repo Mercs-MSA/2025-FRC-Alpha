@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.FlipIntakeCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.subsystems.CoralIntake;
@@ -48,6 +49,7 @@ public class RobotContainer {
   private void configureBindings() {
     m_driverController.a().onTrue(new IntakeCommand(m_CoralIntake));
     m_driverController.b().onTrue(new OuttakeCommand(m_CoralIntake));
+    m_driverController.x().onTrue(new FlipIntakeCommand(m_CoralIntake));
 
 
 
