@@ -62,17 +62,6 @@ public class Coral extends SubsystemBase {
         m_main.setControl(m_VelocityTorque.withVelocity(rpm*state));
     }
 
-    // public void CoralOut(boolean onoff) {
-    //     int rpm;
-    //     if (onoff == true) {
-    //         rpm = Constants.MotorConstants.CoralIntakeRPM;
-    //     } else {
-    //         rpm = 0;
-    //     }
-    //     m_main.setControl(m_VelocityVoltage.withVelocity(rpm*-1));
-    //     m_main.setControl(m_VelocityTorque.withVelocity(rpm*-1));
-    // }
-
     public void CoralBrake() {
         m_main.setControl(m_brake);
     }

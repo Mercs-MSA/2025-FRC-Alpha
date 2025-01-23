@@ -15,6 +15,7 @@ package frc.robot;
 public final class Constants {
   public static class MotorConstants {
     public static final int Flywheelintake = 1;
+    public static final int IntakePivot = 2;
     public static final int CoralIntakeRPM = 10;
     
   }
