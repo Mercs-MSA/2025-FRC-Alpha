@@ -17,7 +17,10 @@ import com.ctre.phoenix6.CANBus;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+  }
 
+  public static class ClawConstants {
     public static int clawMotorID = 0;
+    public static int rangerID = 0;
   }
 }
