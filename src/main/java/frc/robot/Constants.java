@@ -8,6 +8,7 @@ import java.util.Map;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
 import frc.robot.Constants.MotorConstants.AvailableState;
+import frc.robot.Constants.PivotConstants;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -31,25 +32,42 @@ public final class Constants {
     public static String state = "Move";
 
      public enum AvailableState {
-       LEVEL1,
-       LEVEL2,
-       LEVEL3,
-       LEVEL4;
+      LEVEL1(10.0, 10.0),
+      LEVEL2(20.0, 20.0),
+      LEVEL3(30.0, 30.0),
+      LEVEL4(40.0, 40.0);
+
+      private double pivotPos;
+      private double elevatorPos;
+
+      private AvailableState(Double pivotPos, Double elevatorPos)
+      {
+        this.pivotPos = pivotPos;
+        this.elevatorPos = elevatorPos;
+      }
+
+      public double pivotPosGet() {
+        return this.pivotPos;
+      };
+
+      public double elevatorPosGet() {
+        return this.elevatorPos;
+      };
      }
 
 
-    public static final Map<AvailableState,Double> pivotMotorPositions = new HashMap<AvailableState,Double>() {{
-      put(AvailableState.LEVEL1, 10.0);
-      put(AvailableState.LEVEL2, 20.0);
-      put(AvailableState.LEVEL3, 30.0);
-      put(AvailableState.LEVEL4, 40.0);
+    // public static final Map<AvailableState,Double> pivotMotorPositions = new HashMap<AvailableState,Double>() {{
+    //   put(AvailableState.LEVEL1, 10.0);
+    //   put(AvailableState.LEVEL2, 20.0);
+    //   put(AvailableState.LEVEL3, 30.0);
+    //   put(AvailableState.LEVEL4, 40.0);
 
-      //Pivot motor position is dependent on elevator position,
-      //instead could be a mode for pivot from operator side that checks if elevator position is ok
-      // put(AvailableState.ALGAE, 50.0);
-      // put("MoveToProcessor", 60.0);
-      // put("MoveToBarge", 70.0);
-    }};
+    //   //Pivot motor position is dependent on elevator position,
+    //   //instead could be a mode for pivot from operator side that checks if elevator position is ok
+    //   // put(AvailableState.ALGAE, 50.0);
+    //   // put("MoveToProcessor", 60.0);
+    //   // put("MoveToBarge", 70.0);
+    // }};
 
     //MoveToIntakePosition - Number state (constants)
     //MoveToCoral1 - Number state (constants)
@@ -58,13 +76,7 @@ public final class Constants {
 
     //MoveToAlgae - Number state (constants)
     //MoveToProcessor - Number state (constants)
-    //MoveToBarge - Number state (constants)
-
-    public Double returnKey(String key) {
-      return (double)pivotMotorPositions.get(key);
-    };
-
-    
+    //MoveToBarge - Number state (constants)    
   }
 
 

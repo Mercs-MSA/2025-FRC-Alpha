@@ -4,32 +4,29 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.Constants.MotorConstants;
-import frc.robot.Constants.PivotConstants;
-import frc.robot.Constants.MotorConstants.AvailableState;
 
 /** An example command that uses an example subsystem. */
-public class CommandPivotPos extends Command {
-  private Pivot m_Pivot = new Pivot();
-  private double m_pos;
+public class CommandElevelatorPos extends Command {
+  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  private final CommandElevelatorPos m_subsystem;
+
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CommandPivotPos() {
-    addRequirements(m_Pivot);
+  public ExampleCommand(ExampleSubsystem subsystem) {
+    m_subsystem = subsystem;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_pos = PivotConstants.pivotState.pivotPosGet();
-    m_Pivot.moveMethod(m_pos);
-  }
+  public void initialize() {}
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {}
@@ -41,6 +38,6 @@ public class CommandPivotPos extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }
