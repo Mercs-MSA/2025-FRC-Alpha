@@ -5,13 +5,21 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.MotorConstants.AvailableState;
 import frc.robot.commands.Autos;
 import frc.robot.commands.CoralCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.CommandPivotPos;
+import frc.robot.commands.CommandSetState;
 import frc.robot.subsystems.Coral;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 
 /**
@@ -52,6 +60,11 @@ public class RobotContainer {
     // cancelling on release.
     m_driverController.y().whileTrue(new CoralCommand(m_coral, -1));
     m_driverController.b().whileTrue(new CoralCommand(m_coral, 1));
+    m_driverController.a().onTrue(new SequentialCommandGroup(
+      new CommandSetState(AvailableState.LEVEL2),
+      new CommandPivotPos()
+    ));
+
   }
 
   /**

@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -13,18 +14,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorConstants.AvailableState;
+import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.PivotConstants;
 
-public class Pivot extends SubsystemBase {
-  private final TalonFX pivotMotor = new TalonFX(Constants.MotorConstants.IntakePivot, "canivore");
-  
-  private final PositionVoltage pivotVoltage = new PositionVoltage(0);
+public class Elevator extends SubsystemBase {
+  private final TalonFX m_elevmain = new TalonFX(Constants.MotorConstants.ElevatorMain, "canivore");
+  private final TalonFX m_elevfollower = new TalonFX(Constants.MotorConstants.ElevatorFollower, "canivore");
+  private final PositionVoltage elevatorVoltage = new PositionVoltage(0);
 
-  private boolean isMoving = false;
-
-
-
-  public Pivot() {
+  public Elevator() {
+    m_elevfollower.setControl(new Follower(MotorConstants.ElevatorMain, false));
     TalonFXConfiguration configs = new TalonFXConfiguration();
     configs.Slot0.kP = 2.4; // An error of 1 rotation results in 2.4 V output
     configs.Slot0.kI = 0; // No output for integrated error
@@ -41,56 +40,53 @@ public class Pivot extends SubsystemBase {
       .withPeakReverseTorqueCurrent(-40);
 
     /* Retry config apply up to 5 times, report if failure */
-    StatusCode status = StatusCode.StatusCodeNotInitialized;
+    StatusCode status1 = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
-      status = pivotMotor.getConfigurator().apply(configs);
-      if (status.isOK()) break;
+      status1 = m_elevmain.getConfigurator().apply(configs);
+      if (status1.isOK()) break;
     }
-    if (!status.isOK()) {
-      System.out.println("Could not apply configs, error code: " + status.toString());
+    if (!status1.isOK()) {
+      System.out.println("Could not apply configs, error code: " + status1.toString());
+    }
+
+    StatusCode status2 = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; ++i) {
+      status2 = m_elevfollower.getConfigurator().apply(configs);
+      if (status2.isOK()) break;
+    }
+    if (!status2.isOK()) {
+      System.out.println("Could not apply configs, error code: " + status2.toString());
     }
 
     /* Make sure we start at 0 */
-    pivotMotor.setPosition(0);
-    PivotConstants.pivotState = AvailableState.LEVEL1;
+    m_elevmain.setPosition(0);
+    m_elevfollower.setPosition(0);
   }
+
+
+
+  /**
+   * Example command factory method.
+   *
+   * @return a command
+   */
+  public Command exampleMethodCommand() {
+    // Inline construction of command goes here.
+    // Subsystem::RunOnce implicitly requires `this` subsystem.
+    return runOnce(
+        () -> {
+          /* one-time action goes here */
+        });
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
 
-
-
-  //MoveToIntakePosition - Number state (constants)
-  //MoveToCoral1 - Number state (constants)
-  //MoveToCoral2and3 - Number state (constants)
-  //MoveToCoral4 - Number state (constants)
-
-  //MoveToAlgae - Number state (constants)
-  //MoveToProcessor - Number state (constants)
-  //MoveToBarge - Number state (constants)
-
-
-  //Moving - Boolean? (within file)
-  //Moving used in initialization of command
-
-  //int CurrentMotorPos
-  //String DesiredMotorPos - will call to a map in constants for motor position number
-  public void moveMethod(Double DesiredMotorPos) {
-    pivotMotor.setControl(pivotVoltage.withPosition(DesiredMotorPos));
+   public void moveMethod(Double DesiredMotorPos) {
+    m_elevmain.setControl(elevatorVoltage.withPosition(DesiredMotorPos));
     //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
   }
-
-  public void motorArrived() {
-    PivotConstants.pivotState = AvailableState.LEVEL2;
-  };
-
-  // private boolean isMovingCheck() {
-  //   return isMoving;
-  // };
-
-  // private void isMovingSet(Boolean update) {
-  //   isMoving = update;
-  // };
 }

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import frc.robot.Constants.MotorConstants.AvailableState;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -17,20 +18,37 @@ import edu.wpi.first.math.controller.ElevatorFeedforward;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  
+
   public static class MotorConstants {
     public static final int Flywheelintake = 1;
     public static final int IntakePivot = 2;
+    public static final int ElevatorMain = 3;
+    public static final int ElevatorFollower = 4;
     public static final int CoralIntakeRPM = 10;
 
-    public static final Map<String,Double> pivotMotorPositions = new HashMap<String,Double>() {{
-      put("MoveToIntakePosition", 10.0);
-      put("MoveToCoral1", 20.0);
-      put("MoveToCoral2and3", 30.0);
-      put("MoveToCoral4", 40.0);
+    public static String state = "Move";
 
-      put("MoveToAlgae", 50.0);
-      put("MoveToProcessor", 60.0);
-      put("MoveToBarge", 70.0);
+     public enum AvailableState {
+       LEVEL1,
+       LEVEL2,
+       LEVEL3,
+       LEVEL4;
+     }
+
+
+    public static final Map<AvailableState,Double> pivotMotorPositions = new HashMap<AvailableState,Double>() {{
+      put(AvailableState.LEVEL1, 10.0);
+      put(AvailableState.LEVEL2, 20.0);
+      put(AvailableState.LEVEL3, 30.0);
+      put(AvailableState.LEVEL4, 40.0);
+
+      //Pivot motor position is dependent on elevator position,
+      //instead could be a mode for pivot from operator side that checks if elevator position is ok
+      // put(AvailableState.ALGAE, 50.0);
+      // put("MoveToProcessor", 60.0);
+      // put("MoveToBarge", 70.0);
     }};
 
     //MoveToIntakePosition - Number state (constants)
@@ -53,5 +71,10 @@ public final class Constants {
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+  }
+
+  public class PivotConstants
+  {
+      public static AvailableState pivotState = AvailableState.LEVEL1;
   }
 }
