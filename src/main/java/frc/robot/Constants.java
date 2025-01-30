@@ -44,7 +44,7 @@ public final class Constants {
       {
         this.pivotPos = pivotPos;
         this.elevatorPos = elevatorPos;
-      }
+     }
 
       public double pivotPosGet() {
         return this.pivotPos;
@@ -76,7 +76,7 @@ public final class Constants {
 
     //MoveToAlgae - Number state (constants)
     //MoveToProcessor - Number state (constants)
-    //MoveToBarge - Number state (constants)    
+    //MoveToBarge - Number state (constants)
   }
 
 
