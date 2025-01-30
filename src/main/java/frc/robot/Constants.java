@@ -22,5 +22,6 @@ public final class Constants {
   public static class ClawConstants {
     public static int clawMotorID = 0;
     public static int rangerID = 0;
+    public static double timeforclawtorun=0.2;
   }
 }
