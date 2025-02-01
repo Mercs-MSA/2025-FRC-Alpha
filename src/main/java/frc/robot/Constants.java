@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.numbers.N3;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -23,4 +27,10 @@ public final class Constants {
 
 
   }
+
+  public static final class VisionConstants {
+        public static final String limelightFrontName = "limelight-front";
+        public static final String limelightBackName = "limelight-back";
+        public static final Vector<N3> visionStdDevs = VecBuilder.fill(.7,.7,9999999);
+    }
 }

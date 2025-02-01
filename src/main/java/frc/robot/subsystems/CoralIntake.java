@@ -54,7 +54,7 @@ public class CoralIntake extends SubsystemBase {
 
       
     }
-    }
+
 
     /*{
         if(IntakeState()==1.0)
