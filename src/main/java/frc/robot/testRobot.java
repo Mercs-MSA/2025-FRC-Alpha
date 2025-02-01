@@ -13,16 +13,22 @@ import frc.robot.subsystems.OneMotorSystem;
 
 public class testRobot extends TimedRobot{
     private final OneMotorSystem oneMotorSystem = new OneMotorSystem();
+    private final TestRobotContainer container = new TestRobotContainer();
     
     private final XboxController controller = new XboxController(OperatorConstants.kDriverControllerPort);
 
-    private final testCommand command = new testCommand(oneMotorSystem);
+    private final Command command = container.getTeleOpCommand();
 
     @Override
     public void teleopPeriodic() {
         if(controller.getAButtonPressed()){
             command.schedule();
         }
+    }
+
+    public testRobot(){
+        TestRobotContainer robotContainer = new TestRobotContainer();
+
     }
 
 
