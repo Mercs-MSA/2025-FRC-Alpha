@@ -15,14 +15,14 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int MotorFWM_ID = 0;
-  public static final int MotorFM_ID = 1;
-  public static final int FLMDIOPort = 0;
-  public static final double coralIntakingPos= 0; //will fix
-  public static final double coralOutakingPos=360; //will fix
+  //   public static final int MotorFWM_ID = 0;
+  // public static final int MotorFM_ID = 1;
+  // public static final int FLMDIOPort = 0;
+  // public static final double coralIntakingPos= 0; //will fix
+  // public static final double coralOutakingPos=360; //will fix
 
 
-  public static final int BLMDIOPort = 1;
+  // public static final int BLMDIOPort = 1;
 
 
   }

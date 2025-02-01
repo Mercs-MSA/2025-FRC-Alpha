@@ -7,10 +7,10 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.FlipIntakeCommand;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.OuttakeCommand;
-import frc.robot.subsystems.CoralIntake;
+// import frc.robot.commands.FlipIntakeCommand;
+// import frc.robot.commands.IntakeCommand;
+// import frc.robot.commands.OuttakeCommand;
+// import frc.robot.subsystems.CoralIntake;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -24,8 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final CoralIntake m_CoralIntake = new CoralIntake();
-  private final IntakeCommand m_IntakeCommand= new IntakeCommand(m_CoralIntake);
+  // private final CoralIntake m_CoralIntake = new CoralIntake();
+  // private final IntakeCommand m_IntakeCommand= new IntakeCommand(m_CoralIntake);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -47,9 +47,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    m_driverController.a().onTrue(new IntakeCommand(m_CoralIntake));
-    m_driverController.b().onTrue(new OuttakeCommand(m_CoralIntake));
-    m_driverController.x().onTrue(new FlipIntakeCommand(m_CoralIntake));
+    // m_driverController.a().onTrue(new IntakeCommand(m_CoralIntake));
+    // m_driverController.b().onTrue(new OuttakeCommand(m_CoralIntake));
+    // m_driverController.x().onTrue(new FlipIntakeCommand(m_CoralIntake));
 
 
 
