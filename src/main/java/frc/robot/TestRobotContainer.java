@@ -13,8 +13,7 @@ public class TestRobotContainer {
     
     public TestRobotContainer(){
         NamedCommands.registerCommand("Test Command", command);
-        autoCommand = new PathPlannerAuto("New Auto");
-        
+        autoCommand = new PathPlannerAuto("New Auto");  
     }
     testCommand command = new testCommand(testSystem);
     Command autoCommand;
