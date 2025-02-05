@@ -31,6 +31,12 @@ public class testRobot extends TimedRobot{
     }
 
 
+    @Override
+    public void autonomousInit(){
+        container.getAutoCommand().schedule();
+    }
+
+
 
 
 }
