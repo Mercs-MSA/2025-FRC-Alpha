@@ -1,10 +1,17 @@
 {
   "keyboardJoysticks": [
     {
-      "axisConfig": [
+      "axisConfig": 
         {},
         {
           "decKey": 87
+        {
+          "decKey": 65,
+          "incKey": 68
+        },
+        {
+          "decKey": 87,
+          "incKey": 83
         },
         {
           "decKey": 69,
@@ -20,6 +27,10 @@
         83,
         68,
         70
+        90,
+        88,
+        67,
+        86
       ],
       "povConfig": [
         {
