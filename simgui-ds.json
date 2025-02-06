@@ -2,10 +2,6 @@
   "keyboardJoysticks": [
     {
       "axisConfig": [
-      "axisConfig": 
-        {},
-        {
-          "decKey": 87
         {
           "decKey": 65,
           "incKey": 68
@@ -24,10 +20,6 @@
       "axisCount": 3,
       "buttonCount": 4,
       "buttonKeys": [
-        65,
-        83,
-        68,
-        70
         90,
         88,
         67,
@@ -95,11 +87,6 @@
       "axisCount": 0,
       "buttonCount": 0,
       "povCount": 0
-    }
-  ],
-  "robotJoysticks": [
-    {
-      "guid": "Keyboard0"
     }
   ]
 }
