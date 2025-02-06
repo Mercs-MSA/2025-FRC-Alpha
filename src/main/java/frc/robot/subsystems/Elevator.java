@@ -87,6 +87,6 @@ public class Elevator extends SubsystemBase {
 
    public void moveMethod(Double DesiredMotorPos) {
     m_elevmain.setControl(elevatorVoltage.withPosition(DesiredMotorPos));
-    //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
+    // pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
   }
 }
