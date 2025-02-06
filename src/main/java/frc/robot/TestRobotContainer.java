@@ -16,7 +16,6 @@ public class TestRobotContainer {
     public TestRobotContainer(){
         NamedCommands.registerCommand("Test Command", command);
         NamedCommands.registerCommand("CommandCollectCoral", collectCommand);
-        NamedCommands.registerCommand("CommandScoreCoral", score);
         autoCommand = new PathPlannerAuto("New Auto");  
     }
     Command command = new testCommand(testSystem);
@@ -30,6 +29,9 @@ public class TestRobotContainer {
     }
 
     public Command getAutoCommand(){
+    
+        
+        
         return autoCommand;
     }
 }
