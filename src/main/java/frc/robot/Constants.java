@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.CANBus;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -15,5 +17,22 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+  }
+
+  public static class ClawConstants {
+    public static int clawMotorID = 0;
+    public static int rangerID = 0;
+
+    public enum clawState {
+      CORAL_INTAKING_STATE,
+      CORAL_SCORING_STATE,
+      ALGAE_INTAKING_STATE,
+      ALGAE_SCORING_STATE,
+      CORAL_HOLDING_STATE,
+      ALGAE_HOLDING_STATE
+    }
+
+    public static double timeforclawtorun = 0.2;
+    public static double clawVoltage = 6;
   }
 }
