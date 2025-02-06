@@ -15,7 +15,7 @@ public class testRobot extends TimedRobot{
     private final OneMotorSystem oneMotorSystem = new OneMotorSystem();
     private TestRobotContainer robotContainer;
     
-    private final XboxController controller = new XboxController(OperatorConstants.kDriverControllerPort);
+    private final CommandXboxController controller = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
     private final Command command = robotContainer.getTeleOpCommand();
     private final Command autocommand = robotContainer.getAutoCommand();
@@ -23,9 +23,7 @@ public class testRobot extends TimedRobot{
 
     @Override
     public void teleopPeriodic() {
-        if(controller.getAButtonPressed()){
-            command.schedule();
-        }
+        controller.a().onTrue(command);
     }
 
     public testRobot(){
