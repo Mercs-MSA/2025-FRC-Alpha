@@ -3,31 +3,35 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Elevator;
+
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 
 /** An example command that uses an example subsystem. */
-public class CommandElevelatorPos extends Command {
+public class CommandElevelatorPos0 extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private Elevator m_subsystem;
+  private final Elevator m_elevator;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public void ExampleCommand(Elevator subsystem) {
-    m_subsystem = subsystem;
+  public CommandElevelatorPos0(Elevator subsystem) {
+    m_elevator = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() 
+  {
+    //goes to pos 0
+    
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
