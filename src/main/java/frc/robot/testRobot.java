@@ -13,11 +13,13 @@ import frc.robot.subsystems.OneMotorSystem;
 
 public class testRobot extends TimedRobot{
     private final OneMotorSystem oneMotorSystem = new OneMotorSystem();
-    private final TestRobotContainer container = new TestRobotContainer();
+    private TestRobotContainer robotContainer;
     
     private final XboxController controller = new XboxController(OperatorConstants.kDriverControllerPort);
 
-    private final Command command = container.getTeleOpCommand();
+    private final Command command = robotContainer.getTeleOpCommand();
+    private final Command autocommand = robotContainer.getAutoCommand();
+
 
     @Override
     public void teleopPeriodic() {
@@ -27,13 +29,13 @@ public class testRobot extends TimedRobot{
     }
 
     public testRobot(){
-        TestRobotContainer robotContainer = new TestRobotContainer();
+        robotContainer = new TestRobotContainer();
     }
 
 
     @Override
     public void autonomousInit(){
-        container.getAutoCommand().schedule();
+        autocommand.schedule();
     }
 
 
