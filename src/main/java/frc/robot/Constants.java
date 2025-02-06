@@ -14,6 +14,10 @@ import com.ctre.phoenix6.CANBus;
 
 import com.ctre.phoenix6.CANBus;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
+import edu.wpi.first.math.numbers.N3;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -87,8 +91,23 @@ public final class Constants {
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+  //   public static final int MotorFWM_ID = 0;
+  // public static final int MotorFM_ID = 1;
+  // public static final int FLMDIOPort = 0;
+  // public static final double coralIntakingPos= 0; //will fix
+  // public static final double coralOutakingPos=360; //will fix
+
+
+  // public static final int BLMDIOPort = 1;
+
+
   }
 
+  public static final class VisionConstants {
+        public static final String limelightFrontName = "limelight-front";
+        public static final String limelightBackName = "limelight-back";
+        public static final Vector<N3> visionStdDevs = VecBuilder.fill(.7,.7,9999999);
+    }
   public class PivotConstants
   {
       public static AvailableState pivotState = AvailableState.LEVEL1;
