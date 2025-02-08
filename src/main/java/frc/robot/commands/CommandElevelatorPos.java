@@ -4,28 +4,32 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Beambreak;
+import frc.robot.Constants.PivotConstants;
 import edu.wpi.first.wpilibj2.command.Command;
-
 /** An example command that uses an example subsystem. */
 public class CommandElevelatorPos extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final CommandElevelatorPos m_subsystem;
-
+    private Elevator m_elevator = new Elevator();
+  private double m_pos;
   /**
-   * Creates a new ExampleCommand.
+   
+  
+  * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ExampleCommand(ExampleSubsystem subsystem) {
-    m_subsystem = subsystem;
+  public CommandElevelatorPos(Elevator subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_pos = PivotConstants.pivotState.elevatorPosGet();
+    m_elevator.moveMethod(m_pos, false);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
