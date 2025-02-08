@@ -13,7 +13,7 @@ import frc.robot.subsystems.OneMotorSystem;
 
 public class TestRobot extends TimedRobot{
     private final OneMotorSystem oneMotorSystem = new OneMotorSystem();
-    private TestRobotContainer robotContainer;
+    private final TestRobotContainer robotContainer = new TestRobotContainer();
     
     private final CommandXboxController controller = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
@@ -27,7 +27,7 @@ public class TestRobot extends TimedRobot{
     }
 
     public TestRobot(){
-        robotContainer = new TestRobotContainer();
+        
     }
 
 

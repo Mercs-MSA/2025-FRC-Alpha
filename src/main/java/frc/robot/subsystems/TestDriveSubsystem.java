@@ -2,7 +2,10 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.io.IOException;
 import java.util.function.Supplier;
+
+import org.json.simple.parser.ParseException;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
@@ -134,9 +137,11 @@ public class TestDriveSubsystem extends TunerSwerveDrivetrain implements Subsyst
 
     }
 
+    RobotConfig config;
+
     public void configureAutoBuilder(){
         try{
-            var config = RobotConfig.fromGUISettings();
+            config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(() -> getState().Pose,
              this::resetPose,
               () -> getState().Speeds,
@@ -147,9 +152,11 @@ public class TestDriveSubsystem extends TunerSwerveDrivetrain implements Subsyst
                 config,() -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, 
                 this);
         }
-        catch(Exception e){
-            DriverStation.reportError("Config Failed", e.getStackTrace());
+        catch(ParseException e ){
+            DriverStation.reportError("Parsing Error", e.getStackTrace());
 
+        } catch(IOException e){
+            DriverStation.reportError("IO Error", e.getStackTrace());
         }
     }
     /**
