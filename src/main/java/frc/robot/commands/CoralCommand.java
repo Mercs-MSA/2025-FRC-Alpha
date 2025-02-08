@@ -20,7 +20,6 @@ public class CoralCommand extends Command {
   public CoralCommand(Coral subsystem, int state) {
     m_coral = subsystem;
     inout = state;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
 

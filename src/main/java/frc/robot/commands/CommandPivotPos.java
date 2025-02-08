@@ -13,15 +13,16 @@ import frc.robot.Constants.MotorConstants.AvailableState;
 
 /** An example command that uses an example subsystem. */
 public class CommandPivotPos extends Command {
-  private Pivot m_Pivot = new Pivot();
+  private Pivot m_Pivot;
   private double m_pos;
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CommandPivotPos() {
-    addRequirements(m_Pivot);
+  public CommandPivotPos(Pivot subsystem) {
+    addRequirements(subsystem);
+    m_Pivot = subsystem;
   }
 
   // Called when the command is initially scheduled.
