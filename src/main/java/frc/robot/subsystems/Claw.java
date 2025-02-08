@@ -15,8 +15,8 @@ import frc.robot.Constants.OperatorConstants;
 public class Claw extends SubsystemBase {
     //Voltage motor initialized and configured here
     private CANBus fake = new CANBus("temp");
-    private CANrange ranger = new CANrange(Constants.ClawConstants.rangerID, fake.getName());
-    public TalonFX flywheel = new TalonFX(Constants.ClawConstants.clawMotorID, fake.getName());
+    private CANrange ranger = new CANrange(Constants.sensorConstants.CANrangeID, fake.getName());
+    public TalonFX flywheel = new TalonFX(Constants.MotorConstants.FlywheelCoralID,fake.getName());
 
     CANrangeConfiguration configs = new CANrangeConfiguration();
 

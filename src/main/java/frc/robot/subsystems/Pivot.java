@@ -12,15 +12,15 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.MotorConstants.AvailableState;
-import frc.robot.Constants.PivotConstants;
+//import frc.robot.Constants.MotorConstants.AvailableState;
+//import frc.robot.Constants.PivotConstants;
 
 public class Pivot extends SubsystemBase {
-  private final TalonFX pivotMotor = new TalonFX(Constants.MotorConstants.IntakePivot, "canivore");
+  private final TalonFX pivotMotor = new TalonFX(Constants.MotorConstants.pivotMotorID, "canivore");
   
   private final PositionVoltage pivotVoltage = new PositionVoltage(0);
 
-  private boolean isMoving = false;
+  //private boolean isMoving = false;
 
 
 
@@ -52,8 +52,10 @@ public class Pivot extends SubsystemBase {
 
     /* Make sure we start at 0 */
     pivotMotor.setPosition(0);
-    PivotConstants.pivotState = AvailableState.LEVEL1;
+    Constants.MotorConstants.modifyState("resting", Constants.MotorConstants.pivotIndex);  
+     //PivotConstants.pivotState = AvailableState.LEVEL1;
   }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
@@ -77,14 +79,44 @@ public class Pivot extends SubsystemBase {
 
   //int CurrentMotorPos
   //String DesiredMotorPos - will call to a map in constants for motor position number
-  public void moveMethod(Double DesiredMotorPos) {
+  /*public void moveMethodScoreCoral(Double DesiredMotorPos) {
     pivotMotor.setControl(pivotVoltage.withPosition(DesiredMotorPos));
     //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
-  }
+  }*/
+  public void moveMethodCoralIntaking() //need to interpret this abl does not actually check anything. It is likely also not necessary when
+  //tying it to the command groups, as it checks the necessary conditions. will change conditions based on a variable changed when this is successful
+  {  
 
-  public void motorArrived() {
-    PivotConstants.pivotState = AvailableState.LEVEL2;
-  };
+     pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotStateAndValues.get("coralIntaking")));
+     //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
+   
+
+ }
+ public void moveMethodCoralOuttaking()
+ {
+   pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotStateAndValues.get("coralOuttake")));
+
+ }
+ public void moveMethodBarge()
+ {
+   pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotStateAndValues.get("barge")));
+
+ }
+ public void moveMethodAlgaeIntake()
+ {
+   pivotMotor.setControl(pivotVoltage .withPosition(Constants.MotorConstants.pivotStateAndValues.get("algaeIntake")));
+
+ }
+ public void moveMethodL4()
+ {
+   pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotStateAndValues.get("L4")));
+
+ }
+ 
+
+  // public void motorArrived() {
+  //   PivotConstants.pivotState = AvailableState.LEVEL2;
+  // };
 
   // private boolean isMovingCheck() {
   //   return isMoving;
