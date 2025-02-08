@@ -5,11 +5,11 @@ import java.time.Clock;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class testCommand extends Command {
+public class TestCommand extends Command {
     OneMotorSystem oneMotor;
     long time;
 
-    public testCommand(OneMotorSystem oneMotor){
+    public TestCommand(OneMotorSystem oneMotor){
         this.oneMotor = oneMotor;
     }
 

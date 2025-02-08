@@ -6,7 +6,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.CommandCollectCoral;
 import frc.robot.commands.CommandScoreCoral;
-import frc.robot.commands.testCommand;
+import frc.robot.commands.TestCommand;
 import frc.robot.subsystems.OneMotorSystem;
 
 public class TestRobotContainer {
@@ -18,7 +18,7 @@ public class TestRobotContainer {
         NamedCommands.registerCommand("CommandCollectCoral", collectCommand);
         autoCommand = new PathPlannerAuto("New Auto");  
     }
-    Command command = new testCommand(testSystem);
+    Command command = new TestCommand(testSystem);
     Command collectCommand = new CommandCollectCoral();
     Command score = new CommandScoreCoral();
     Command autoCommand;
