@@ -19,7 +19,7 @@ public class TestRobotContainer {
 
 
     
-    TestDriveSubsystem drive = new TestDriveSubsystem(TunerConstants.DrivetrainConstants, TunerConstants.FrontLeft, TunerConstants.BackLeft, TunerConstants.BackRight, TunerConstants.FrontRight);
+    TestDriveSubsystem drive = new TestDriveSubsystem(TunerConstants.DrivetrainConstants, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);
 
     
     
