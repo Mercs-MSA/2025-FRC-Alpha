@@ -85,8 +85,12 @@ public class Elevator extends SubsystemBase {
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
 
-   public void moveMethod(Double DesiredMotorPos) {
-    m_elevmain.setControl(elevatorVoltage.withPosition(DesiredMotorPos));
-    // pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
+
+   public void moveMethod(Double DesiredMotorPos, boolean Able) {
+    if (Able == true) {
+      m_elevmain.setControl(elevatorVoltage.withPosition(DesiredMotorPos));
+      //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
+    }
+
   }
 }

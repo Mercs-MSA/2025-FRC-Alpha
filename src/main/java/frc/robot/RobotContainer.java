@@ -11,11 +11,9 @@ import frc.robot.commands.CoralCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-// import frc.robot.commands.FlipIntakeCommand;
-// import frc.robot.commands.IntakeCommand;
-// import frc.robot.commands.OuttakeCommand;
-// import frc.robot.subsystems.CoralIntake;
+
 import frc.robot.subsystems.ExampleSubsystem;
+
 import frc.robot.commands.CommandPivotPos;
 import frc.robot.commands.CommandSetState;
 import frc.robot.subsystems.Coral;
@@ -37,8 +35,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+
   // private final CoralIntake m_CoralIntake = new CoralIntake();
   // private final IntakeCommand m_IntakeCommand= new IntakeCommand(m_CoralIntake);
+
   private final Coral m_coral = new Coral();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -90,10 +90,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  //public Command getAutonomousCommand() { //Dont know what to do with this for now, commenting it out.
-    // An example command will be run in autonomous
-    // return Autos.exampleAuto(m_exampleSubsystem);
-  //}
+
+
   // public Command getAutonomousCommand() {
   //  An example command will be run in autonomous
   //  return Autos.exampleAuto(m_exampleSubsystem);
