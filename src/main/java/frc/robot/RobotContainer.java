@@ -78,6 +78,7 @@ public class RobotContainer {
     System.out.println(m_driverController.getLeftX());
 
     m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, m_driverController.getLeftY()));
+    m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
 
     // m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
     // m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));
