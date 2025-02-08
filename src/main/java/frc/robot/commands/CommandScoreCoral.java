@@ -2,13 +2,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.ExampleSubsystem;
 
 public class CommandScoreCoral extends Command {
-    public final Claw m_claw = new Claw();
-    public CommandScoreCoral() {
-        // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(m_claw);
+    public final Claw m_claw;
+    public CommandScoreCoral(Claw subsystem) {
+        addRequirements(subsystem);
+        m_claw = subsystem;
     }
     
     // Called when the command is initially scheduled.

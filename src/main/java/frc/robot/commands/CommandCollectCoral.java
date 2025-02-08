@@ -7,10 +7,11 @@ import edu.wpi.first.wpilibj.Timer;
 
 
 public class CommandCollectCoral extends Command {
-    public final Claw m_claw = new Claw();
-    public CommandCollectCoral() {
-        // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(m_claw);
+    public final Claw m_claw;
+    public CommandCollectCoral(Claw subsystem) {
+        addRequirements(subsystem);
+        m_claw = subsystem;
+
     }
     
     // Called when the command is initially scheduled.
