@@ -4,28 +4,20 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.MotorConstants.AvailableState;
-import frc.robot.commands.Autos;
-import frc.robot.commands.CommandCoral;
-import frc.robot.commands.CommandElevelatorPos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-
-import frc.robot.subsystems.Pivot;
-import frc.robot.subsystems.Elevator;
-
-import frc.robot.commands.CommandPivotPos;
-import frc.robot.commands.CommandSetState;
-import frc.robot.subsystems.Coral;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.MotorConstants.AvailableState;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.CommandCoral;
+import frc.robot.commands.CommandElevelatorPos;
+import frc.robot.commands.CommandPivotPos;
+import frc.robot.commands.CommandSetState;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Coral;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Pivot;
 
 
 
@@ -40,6 +32,8 @@ public class RobotContainer {
 
   // private final CoralIntake m_CoralIntake = new CoralIntake();
   // private final IntakeCommand m_IntakeCommand= new IntakeCommand(m_CoralIntake);
+
+
   
   private final Coral m_coral = new Coral();
   private final Elevator m_Elevator = new Elevator();
@@ -56,7 +50,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-
+    
   }
 
   /**
@@ -81,14 +75,17 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.getLeftX();
-    m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
-    m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));
-    m_driverController.a().onTrue(new SequentialCommandGroup(
-      new CommandSetState(AvailableState.LEVEL2),
-      new CommandPivotPos(m_Pivot),
-      new CommandElevelatorPos(m_Elevator)
-    ));
+    System.out.println(m_driverController.getLeftX());
+
+    m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, m_driverController.getLeftY()));
+
+    // m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
+    // m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));
+    // m_driverController.a().onTrue(new SequentialCommandGroup(
+    //   new CommandSetState(AvailableState.LEVEL2),
+    //   new CommandPivotPos(m_Pivot),
+    //   new CommandElevelatorPos(m_Elevator)
+    // ));
 
   }
 

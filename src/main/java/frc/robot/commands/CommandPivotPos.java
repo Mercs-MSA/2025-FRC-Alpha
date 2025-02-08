@@ -20,15 +20,16 @@ public class CommandPivotPos extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CommandPivotPos(Pivot subsystem) {
+  public CommandPivotPos(Pivot subsystem, Double test) {
     addRequirements(subsystem);
     m_Pivot = subsystem;
+    m_pos = test;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_pos = PivotConstants.pivotState.pivotPosGet();
+    //m_pos = PivotConstants.pivotState.pivotPosGet();
     m_Pivot.moveMethod(m_pos);
   }
   // Called every time the scheduler runs while the command is scheduled.
