@@ -4,6 +4,12 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -18,7 +24,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
-
+import frc.robot.generated.TunerConstants;
 
 
 /**
@@ -33,7 +39,11 @@ public class RobotContainer {
   // private final CoralIntake m_CoralIntake = new CoralIntake();
   // private final IntakeCommand m_IntakeCommand= new IntakeCommand(m_CoralIntake);
 
-
+  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
+  private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
+  
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1);
   
   private final Coral m_coral = new Coral();
   private final Elevator m_Elevator = new Elevator();
@@ -74,11 +84,23 @@ public class RobotContainer {
     //     .onTrue(new ExampleCommand(m_coral));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    System.out.println(m_driverController.getLeftX());
+    // cancelling on release.''
 
-    m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, m_driverController.getLeftY()));
-    m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
+
+    drivetrain.setDefaultCommand(
+      // Drivetrain will execute this command periodically
+      drivetrain.applyRequest(() ->
+          drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+              .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+              .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+      )
+  );
+
+    
+    
+
+    // m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, m_driverController.getLeftY()));
+    // m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
 
     // m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
     // m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));
@@ -88,6 +110,7 @@ public class RobotContainer {
     //   new CommandElevelatorPos(m_Elevator)
     // ));
 
+    
   }
 
   /**
