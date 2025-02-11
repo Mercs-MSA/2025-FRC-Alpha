@@ -43,13 +43,14 @@ public class RobotContainer {
   private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
   
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-    .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1);
+    .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05); // 5% deadzone
   
   private final Coral m_coral = new Coral();
   private final Elevator m_Elevator = new Elevator();
   private final Pivot m_Pivot = new Pivot();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
@@ -99,8 +100,8 @@ public class RobotContainer {
     
     
 
-    // m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, m_driverController.getLeftY()));
-    // m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
+    m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, 1.0));
+    m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
 
     // m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
     // m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));
