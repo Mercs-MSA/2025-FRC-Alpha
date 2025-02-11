@@ -4,27 +4,27 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.Constants.MotorConstants.AvailableState;
-import frc.robot.commands.Autos;
-import frc.robot.commands.CoralCommand;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 
-import frc.robot.subsystems.ExampleSubsystem;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import frc.robot.commands.CommandPivotPos;
-import frc.robot.commands.CommandSetState;
-import frc.robot.subsystems.Coral;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.robot.Constants.MotorConstants.AvailableState;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.CommandCoral;
+import frc.robot.commands.CommandElevelatorPos;
+import frc.robot.commands.CommandPivotPos;
+import frc.robot.commands.CommandSetState;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Coral;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Pivot;
+import frc.robot.generated.TunerConstants;
 
 
 /**
@@ -39,9 +39,18 @@ public class RobotContainer {
   // private final CoralIntake m_CoralIntake = new CoralIntake();
   // private final IntakeCommand m_IntakeCommand= new IntakeCommand(m_CoralIntake);
 
+  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
+  private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
+  
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05); // 5% deadzone
+  
   private final Coral m_coral = new Coral();
+  private final Elevator m_Elevator = new Elevator();
+  private final Pivot m_Pivot = new Pivot();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
@@ -52,6 +61,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    
   }
 
   /**
@@ -75,14 +85,33 @@ public class RobotContainer {
     //     .onTrue(new ExampleCommand(m_coral));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.y().whileTrue(new CoralCommand(m_coral, -1));
-    m_driverController.b().whileTrue(new CoralCommand(m_coral, 1));
-    m_driverController.a().onTrue(new SequentialCommandGroup(
-      new CommandSetState(AvailableState.LEVEL2),
-      new CommandPivotPos()
-    ));
+    // cancelling on release.''
 
+
+    drivetrain.setDefaultCommand(
+      // Drivetrain will execute this command periodically
+      drivetrain.applyRequest(() ->
+          drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+              .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+              .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+      )
+  );
+
+    
+    
+
+    m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, 1.0));
+    m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
+
+    // m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
+    // m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));
+    // m_driverController.a().onTrue(new SequentialCommandGroup(
+    //   new CommandSetState(AvailableState.LEVEL2),
+    //   new CommandPivotPos(m_Pivot),
+    //   new CommandElevelatorPos(m_Elevator)
+    // ));
+
+    
   }
 
   /**

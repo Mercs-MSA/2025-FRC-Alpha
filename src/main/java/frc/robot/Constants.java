@@ -112,8 +112,6 @@ public final class Constants {
   {
       public static AvailableState pivotState = AvailableState.LEVEL1;
   }
-
-  
   
   public static class ClawConstants {
     public static int clawMotorID = 0;

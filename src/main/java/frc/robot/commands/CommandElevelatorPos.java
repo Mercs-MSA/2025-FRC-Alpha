@@ -10,7 +10,7 @@ import frc.robot.Constants.PivotConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 /** An example command that uses an example subsystem. */
 public class CommandElevelatorPos extends Command {
-    private Elevator m_elevator;
+  private Elevator m_elevator;
   private double m_pos;
   /**
    
@@ -22,7 +22,6 @@ public class CommandElevelatorPos extends Command {
   public CommandElevelatorPos(Elevator subsystem) {
     addRequirements(subsystem);
     m_elevator = subsystem;
-
   }
 
   // Called when the command is initially scheduled.
