@@ -80,13 +80,11 @@ public class RobotContainer {
 
 
 
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_coral::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_coral));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.''
 
+
+    // This is the swerve control which I have taken out while we are currently
+    // testing sub systems. Deadzone is 5%
 
   //   drivetrain.setDefaultCommand(
   //     // Drivetrain will execute this command periodically
@@ -98,21 +96,12 @@ public class RobotContainer {
   // );
 
     
-    
-
     m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, 1.0));
     m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
 
     
     m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
-    m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));
-    // m_driverController.a().onTrue(new SequentialCommandGroup(
-    //   new CommandSetState(AvailableState.LEVEL2),
-    //   new CommandPivotPos(m_Pivot),
-    //   new CommandElevelatorPos(m_Elevator)
-    // ));
-
-    
+    m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));    
   }
 
   /**
