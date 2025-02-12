@@ -12,7 +12,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import frc.robot.Constants;
 
 public class Coral extends SubsystemBase {
-    private final TalonFX m_main = new TalonFX(Constants.MotorConstants.Flywheelintake, "canivore");
+    private final TalonFX m_main = new TalonFX(Constants.MotorConstants.Flywheelintake, "rio");
     private final VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0).withSlot(0);
     private final VelocityTorqueCurrentFOC m_VelocityTorque = new VelocityTorqueCurrentFOC(0).withSlot(0);
     private final NeutralOut m_brake = new NeutralOut();
@@ -59,7 +59,6 @@ public class Coral extends SubsystemBase {
             rpm = 0;
         }
         m_main.setControl(m_VelocityVoltage.withVelocity(rpm*state));
-        m_main.setControl(m_VelocityTorque.withVelocity(rpm*state));
     }
 
     public void CoralBrake() {

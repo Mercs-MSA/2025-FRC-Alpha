@@ -88,14 +88,14 @@ public class RobotContainer {
     // cancelling on release.''
 
 
-    drivetrain.setDefaultCommand(
-      // Drivetrain will execute this command periodically
-      drivetrain.applyRequest(() ->
-          drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-              .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-              .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-      )
-  );
+  //   drivetrain.setDefaultCommand(
+  //     // Drivetrain will execute this command periodically
+  //     drivetrain.applyRequest(() ->
+  //         drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+  //             .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+  //             .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+  //     )
+  // );
 
     
     
@@ -103,8 +103,9 @@ public class RobotContainer {
     m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, 1.0));
     m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
 
-    // m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
-    // m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));
+    
+    m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
+    m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));
     // m_driverController.a().onTrue(new SequentialCommandGroup(
     //   new CommandSetState(AvailableState.LEVEL2),
     //   new CommandPivotPos(m_Pivot),
