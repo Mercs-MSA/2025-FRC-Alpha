@@ -80,8 +80,8 @@ public class RobotContainer {
     // m_driverController.x().onTrue(new FlipIntakeCommand(m_CoralIntake));
 
 
-    m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.1));
-    m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, -0.1));
+    m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 1));
+    m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, -1));
 
 
     // This is the swerve control which I have taken out while we are currently

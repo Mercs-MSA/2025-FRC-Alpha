@@ -33,9 +33,11 @@ public final class Constants {
   public static class MotorConstants {
     public static final int Flywheelintake = 21;
     public static final int IntakePivot = 2;
-    public static final int ElevatorMain = 3;
-    public static final int ElevatorFollower = 4;
+    public static final int ElevatorMain = 36;
+    public static final int ElevatorFollower = 38;
     public static final int CoralIntakeRPM = 30;
+
+    public static double elevatortemppos= 0;
 
     public static String state = "Move";
 

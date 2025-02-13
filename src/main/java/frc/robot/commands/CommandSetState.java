@@ -4,10 +4,9 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
-import frc.robot.Constants.PivotConstants;
-import frc.robot.Constants.MotorConstants.AvailableState;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.MotorConstants.AvailableState;
+import frc.robot.Constants.PivotConstants;
 
 /** An example command that uses an example subsystem. */
 public class CommandSetState extends Command {
@@ -26,12 +25,13 @@ public class CommandSetState extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    PivotConstants.pivotState = currentState;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    PivotConstants.pivotState = currentState;
+  }
 
   // Called once the command ends or is interrupted.
   @Override

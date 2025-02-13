@@ -18,8 +18,8 @@ import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.PivotConstants;
 
 public class Elevator extends SubsystemBase {
-  private final TalonFX m_elevmain = new TalonFX(Constants.MotorConstants.ElevatorMain, "canivore");
-  private final TalonFX m_elevfollower = new TalonFX(Constants.MotorConstants.ElevatorFollower, "canivore");
+  private final TalonFX m_elevmain = new TalonFX(Constants.MotorConstants.ElevatorMain, "rio");
+  private final TalonFX m_elevfollower = new TalonFX(Constants.MotorConstants.ElevatorFollower, "rio");
   private final PositionVoltage elevatorVoltage = new PositionVoltage(0);
 
   public Elevator() {
@@ -91,6 +91,15 @@ public class Elevator extends SubsystemBase {
       m_elevmain.setControl(elevatorVoltage.withPosition(DesiredMotorPos));
       //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
     }
-
   }
-}
+
+
+  /**
+   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+   *
+   * @return value of some boolean subsystem state, such as a digital sensor.
+   */    
+    public double getPosition() {
+      return (m_elevmain.getPosition().getValueAsDouble());
+    }
+  }
