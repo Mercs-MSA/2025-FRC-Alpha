@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.MotorConstants.AvailableState;
+import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CommandCoral;
 import frc.robot.commands.CommandElevelatorPos;
@@ -42,7 +43,7 @@ public class RobotContainer {
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
   private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
   
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+  private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
     .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05); // 5% deadzone
   
   private final Coral m_coral = new Coral();
@@ -79,25 +80,25 @@ public class RobotContainer {
     // m_driverController.x().onTrue(new FlipIntakeCommand(m_CoralIntake));
 
 
-
-
+    m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.1));
+    m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, -0.1));
 
 
     // This is the swerve control which I have taken out while we are currently
     // testing sub systems. Deadzone is 5%
 
-  //   drivetrain.setDefaultCommand(
-  //     // Drivetrain will execute this command periodically
-  //     drivetrain.applyRequest(() ->
-  //         drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-  //             .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-  //             .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-  //     )
-  // );
+    drivetrain.setDefaultCommand(
+      // Drivetrain will execute this command periodically
+      drivetrain.applyRequest(() ->
+          drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+              .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+              .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+      )
+  );
 
     
-    m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, 1.0));
-    m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
+    // m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, 5.0));
+    // m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
 
     
     m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
