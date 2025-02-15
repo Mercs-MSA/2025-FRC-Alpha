@@ -4,13 +4,34 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
+import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.MotorConstants.AvailableState;
+import frc.robot.Constants.MotorConstants;
+import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.CommandCoral;
+import frc.robot.commands.CommandElevelatorPos;
+import frc.robot.commands.CommandCollectCoral;
+import frc.robot.commands.CommandScoreCoral;
+import frc.robot.commands.CommandPivotPos;
+import frc.robot.commands.CommandSetState;
+import frc.robot.commands.CommandPivotPosOpposite;
+import frc.robot.commands.CommandStopCoral;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Coral;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Claw;
+import frc.robot.generated.TunerConstants;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -20,16 +41,34 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+
+  // private final CoralIntake m_CoralIntake = new CoralIntake();
+  // private final IntakeCommand m_IntakeCommand= new IntakeCommand(m_CoralIntake);
+
+  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
+  private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
+  
+  private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
+    .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05); // 5% deadzone
+  
+  private final Coral m_coral = new Coral();
+  public final Elevator m_Elevator = new Elevator();
+  private final Pivot m_Pivot = new Pivot();
+  private final Claw m_claw =new Claw();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  
+  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    
   }
 
   /**
@@ -42,13 +81,39 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // m_driverController.a().onTrue(new IntakeCommand(m_CoralIntake));
+    // m_driverController.b().onTrue(new OuttakeCommand(m_CoralIntake));
+    // m_driverController.x().onTrue(new FlipIntakeCommand(m_CoralIntake));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+   // m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
+   // m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
+    m_driverController.pov(0).whileTrue(new CommandPivotPos(m_Pivot, 0.25));
+    m_driverController.pov(180).whileTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
+    m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
+    m_driverController.b().onTrue(new CommandStopCoral(m_claw));
+
+
+
+    // This is the swerve control which I have taken out while we are currently
+    // testing sub systems. Deadzone is 5%
+
+    drivetrain.setDefaultCommand(
+      // Drivetrain will execute this command periodically
+      drivetrain.applyRequest(() ->
+          drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+              .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+              .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+      )
+  );
+
+    
+    // m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, 5.0));
+    // m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
+
+    
+    m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
+    m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));    
   }
 
   /**
@@ -56,8 +121,10 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }
+
+
+  // public Command getAutonomousCommand() {
+  //  An example command will be run in autonomous
+  //  return Autos.exampleAuto(m_exampleSubsystem);
+  // }
 }
