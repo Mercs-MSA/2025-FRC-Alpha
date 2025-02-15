@@ -10,6 +10,7 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -93,6 +94,10 @@ public class Elevator extends SubsystemBase {
     }
   }
 
+  @Override
+  public void periodic() {
+    //System.out.println("Elevator pos:"+ getPosition());
+  }
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).

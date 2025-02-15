@@ -18,13 +18,18 @@ import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CommandCoral;
 import frc.robot.commands.CommandElevelatorPos;
+import frc.robot.commands.CommandCollectCoral;
+import frc.robot.commands.CommandScoreCoral;
 import frc.robot.commands.CommandPivotPos;
 import frc.robot.commands.CommandSetState;
+import frc.robot.commands.CommandPivotPosOpposite;
+import frc.robot.commands.CommandStopCoral;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Coral;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
+import frc.robot.subsystems.Claw;
 import frc.robot.generated.TunerConstants;
 
 
@@ -47,8 +52,9 @@ public class RobotContainer {
     .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05); // 5% deadzone
   
   private final Coral m_coral = new Coral();
-  private final Elevator m_Elevator = new Elevator();
+  public final Elevator m_Elevator = new Elevator();
   private final Pivot m_Pivot = new Pivot();
+  private final Claw m_claw =new Claw();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
@@ -80,8 +86,13 @@ public class RobotContainer {
     // m_driverController.x().onTrue(new FlipIntakeCommand(m_CoralIntake));
 
 
-    m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 1));
-    m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, -1));
+   // m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
+   // m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
+    m_driverController.pov(0).whileTrue(new CommandPivotPos(m_Pivot, 0.25));
+    m_driverController.pov(180).whileTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
+    m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
+    m_driverController.b().onTrue(new CommandStopCoral(m_claw));
+
 
 
     // This is the swerve control which I have taken out while we are currently

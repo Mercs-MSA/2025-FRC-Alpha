@@ -77,6 +77,11 @@ public class Pivot extends SubsystemBase {
 
   //int CurrentMotorPos
   //String DesiredMotorPos - will call to a map in constants for motor position number
+  public void periodic() {
+    System.out.println("Pivot pos:"+ getPositionPivot());
+  }
+
+
   public void moveMethod(Double DesiredMotorPos) {
     pivotMotor.setControl(pivotVoltage.withPosition(DesiredMotorPos));
     //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
@@ -84,7 +89,10 @@ public class Pivot extends SubsystemBase {
 
   public void motorArrived() {
     PivotConstants.pivotState = AvailableState.LEVEL2;
-  };
+  }
+  public double getPositionPivot() {
+    return (pivotMotor.getPosition().getValueAsDouble());
+  }
 
   // private boolean isMovingCheck() {
   //   return isMoving;

@@ -3,9 +3,9 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Claw;
 
-public class CommandScoreCoral extends Command {
+public class CommandStopCoral extends Command {
     public final Claw m_claw;
-    public CommandScoreCoral(Claw subsystem) {
+    public CommandStopCoral(Claw subsystem) {
         addRequirements(subsystem);
         m_claw = subsystem;
     }
@@ -13,7 +13,7 @@ public class CommandScoreCoral extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_claw.setVoltage(-5);
+        m_claw.setVoltage(0);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -30,8 +30,7 @@ public class CommandScoreCoral extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (m_claw.getDistance() > .02)
             return true;
-        return false;
+
     }
 }

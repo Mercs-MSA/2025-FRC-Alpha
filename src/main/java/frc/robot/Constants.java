@@ -31,7 +31,7 @@ public final class Constants {
   
 
   public static class MotorConstants {
-    public static final int Flywheelintake = 21;
+    public static final int Flywheelintake = 20;
     public static final int IntakePivot = 2;
     public static final int ElevatorMain = 36;
     public static final int ElevatorFollower = 38;
@@ -117,8 +117,8 @@ public final class Constants {
   }
   
   public static class ClawConstants {
-    public static int clawMotorID = 0;
-    public static int rangerID = 0;
+    public static int clawMotorID = 21;
+    public static int rangerID = 14;
 
     public enum clawState {
       CORAL_INTAKING_STATE,

@@ -12,7 +12,7 @@ import frc.robot.Constants.PivotConstants;
 import frc.robot.Constants.MotorConstants.AvailableState;
 
 /** An example command that uses an example subsystem. */
-public class CommandPivotPos extends Command {
+public class CommandPivotPosOpposite extends Command {
   private Pivot m_Pivot;
   private double m_pos;
   private double m_add;
@@ -21,7 +21,7 @@ public class CommandPivotPos extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CommandPivotPos(Pivot subsystem, Double test) {
+  public CommandPivotPosOpposite(Pivot subsystem, Double test) {
     addRequirements(subsystem);
     m_add = test;
     m_pos = m_Pivot.getPositionPivot() + m_add;
@@ -33,8 +33,7 @@ public class CommandPivotPos extends Command {
   @Override
   public void initialize() {
     //m_pos = PivotConstants.pivotState.pivotPosGet();
-    m_Pivot.moveMethod(m_pos);
-  }
+    m_Pivot.moveMethod(m_pos);  }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {}
