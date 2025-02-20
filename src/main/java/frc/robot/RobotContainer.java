@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import au.grapplerobotics.LaserCan;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -63,6 +64,8 @@ public class RobotContainer {
   
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+  static boolean laserDetect = false;
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -80,6 +83,19 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
+
+  public void laserDetector() {
+    LaserCan.Measurement measurement = Robot.laser.getMeasurement();
+    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+      System.out.println("coral here");
+      laserDetect = true;
+    } else {
+      System.out.println("coral not here");
+      laserDetect = false;
+    }
+  }
+
+  
   private void configureBindings() {
     // m_driverController.a().onTrue(new IntakeCommand(m_CoralIntake));
     // m_driverController.b().onTrue(new OuttakeCommand(m_CoralIntake));
@@ -88,10 +104,10 @@ public class RobotContainer {
 
    // m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
    // m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
-    m_driverController.pov(0).whileTrue(new CommandPivotPos(m_Pivot, 0.25));
-    m_driverController.pov(180).whileTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
-    m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
-    m_driverController.b().onTrue(new CommandStopCoral(m_claw));
+  m_driverController.pov(0).whileTrue(new CommandPivotPos(m_Pivot, 0.25));
+  m_driverController.pov(180).whileTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
+  m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
+  m_driverController.b().onTrue(new CommandStopCoral(m_claw));
 
 
 
