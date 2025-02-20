@@ -7,13 +7,17 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.Pivot;
 
 public class CommandGroups extends SubsystemBase {
+  Elevator m_elevator=new Elevator(); //creating new objects of all subsyystems in the constructor, as its methods call their methods
+  Claw m_claw=new Claw();
+  Pivot m_pivot=new Pivot();
   /** Creates a new ExampleSubsystem. */
   public CommandGroups() {
-    Elevator m_elevator=new Elevator(); //creating new objects of all subsyystems in the constructor, as its methods call their methods
-    Claw m_claw=new Claw();
-    Pivot m_pivot=new Pivot();
+   
   }
 
   /**
@@ -51,6 +55,13 @@ public class CommandGroups extends SubsystemBase {
   }
   public void scoreL1()
   {
+      if(Constants.MotorConstants.state[Constants.MotorConstants.elevIndex].equals("L1"));
+      {
+        m_elevator.MoveMethodL1();
+
+      }
+      if()
+
     //if(Constants.MotorConstants.state[Constants.MotorConstants])
     //if elevator is not at L1:
     //m_elevator.moveMethod() pass in desired motor pos when tied to a button

@@ -83,6 +83,14 @@ public class Pivot extends SubsystemBase {
     pivotMotor.setControl(pivotVoltage.withPosition(DesiredMotorPos));
     //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
   }*/
+  public void periodic() 
+  {
+    System.out.println("Pivot pos:"+ getPositionPivot());
+  }
+  public double getPositionPivot() 
+  {
+    return (pivotMotor.getPosition().getValueAsDouble());
+  }
   public void moveMethodCoralIntaking() //need to interpret this abl does not actually check anything. It is likely also not necessary when
   //tying it to the command groups, as it checks the necessary conditions. will change conditions based on a variable changed when this is successful
   {  
