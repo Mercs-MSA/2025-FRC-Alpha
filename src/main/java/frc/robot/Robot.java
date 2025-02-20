@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import au.grapplerobotics.CanBridge;
+import au.grapplerobotics.ConfigurationFailedException;
+import au.grapplerobotics.LaserCan;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -21,6 +24,7 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
+  public static final LaserCan laser = new LaserCan(14);
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -30,6 +34,14 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    try {
+      laser.setRangingMode(LaserCan.RangingMode.SHORT);
+      laser.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
+      laser.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
+    } catch (ConfigurationFailedException e) {
+      System.out.println("Configuration failed! " + e);
+    }
+    CanBridge.runTCP();
   }
 
   /**
@@ -65,6 +77,11 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    
+    m_robotContainer.laserDetector();
+
+    SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);
+
     CommandScheduler.getInstance().run();
   }
 
