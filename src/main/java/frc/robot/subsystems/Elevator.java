@@ -89,7 +89,7 @@ public class Elevator extends SubsystemBase {
 
    public void moveMethod(Double DesiredMotorPos, boolean Able) {
     if (Able == true) {
-      m_elevmain.setControl(elevatorVoltage.withPosition(DesiredMotorPos));
+      m_elevmain.setControl(elevatorVoltage.withPosition(DesiredMotorPos).withSlot(0));
       //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
     }
   }
@@ -107,4 +107,15 @@ public class Elevator extends SubsystemBase {
     public double getPosition() {
       return (m_elevmain.getPosition().getValueAsDouble());
     }
+    public void disableSubsystem() {
+      m_elevmain.disable();
+      m_elevfollower.disable();
+    }
+
+    public void powerSubsystem() {
+      m_elevmain.set(0);
+      m_elevfollower.set(0);
+    }
   }
+
+  

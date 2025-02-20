@@ -14,9 +14,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.MotorConstants.AvailableState;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CommandCoral;
+import frc.robot.commands.CommandElevelatorMoveToPos;
 import frc.robot.commands.CommandElevelatorPos;
 import frc.robot.commands.CommandCollectCoral;
 import frc.robot.commands.CommandScoreCoral;
@@ -88,10 +90,14 @@ public class RobotContainer {
 
    // m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
    // m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
-    m_driverController.pov(0).whileTrue(new CommandPivotPos(m_Pivot, 0.25));
-    m_driverController.pov(180).whileTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
-    m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
-    m_driverController.b().onTrue(new CommandStopCoral(m_claw));
+    //m_driverController.pov(0).whileTrue(new CommandPivotPos(m_Pivot, 0.25));
+    //m_driverController.pov(180).whileTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
+    //m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
+    //m_driverController.b().onTrue(new CommandStopCoral(m_claw));
+    m_driverController.a().onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1, true));
+    m_driverController.x().onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2, false));
+    m_driverController.b().onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3, false));
+    m_driverController.y().onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4, false));
 
 
 
@@ -112,8 +118,8 @@ public class RobotContainer {
     // m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
 
     
-    m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
-    m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));    
+    //m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
+    //m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));    
   }
 
   /**

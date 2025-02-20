@@ -28,7 +28,12 @@ import edu.wpi.first.math.numbers.N3;
  */
 public final class Constants {
 
-  
+  public static class ElevatorConstants {
+    public static final double L1 = 0.7;
+    public static final double L2 = 5.45;
+    public static final double L3 = 12.90;
+    public static final double L4 = 25.75;
+  };
 
   public static class MotorConstants {
     public static final int Flywheelintake = 20;
