@@ -22,6 +22,8 @@ import frc.robot.commands.CommandCollectCoral;
 import frc.robot.commands.CommandScoreCoral;
 import frc.robot.commands.CommandPivotPos;
 import frc.robot.commands.CommandSetState;
+import frc.robot.commands.CommandPivotPos;
+import frc.robot.commands.CommandPivotPos;
 import frc.robot.commands.CommandPivotPosOpposite;
 import frc.robot.commands.CommandStopCoral;
 import frc.robot.generated.TunerConstants;
@@ -88,8 +90,8 @@ public class RobotContainer {
 
    // m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
    // m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
-    m_driverController.pov(0).whileTrue(new CommandPivotPos(m_Pivot, 0.25));
-    m_driverController.pov(180).whileTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
+    m_driverController.x().onTrue(new CommandPivotPos(m_Pivot, 0.25));
+    m_driverController.y().onTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
     m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
     m_driverController.b().onTrue(new CommandStopCoral(m_claw));
 
