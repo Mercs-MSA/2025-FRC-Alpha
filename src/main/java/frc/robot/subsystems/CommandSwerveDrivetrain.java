@@ -68,7 +68,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 this);
         }
         catch(Exception e){
-            DriverStation.reportError("IO Error", e.getStackTrace());
+            DriverStation.reportError("Error", e.getStackTrace());
         }
     }
 
@@ -152,6 +152,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        try {
+            configureAutoBuilder();
+        } catch (ParseException e) {
+            DriverStation.reportError("Parse Exception", e.getStackTrace());
+        }
     }
 
     /**
@@ -175,6 +180,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super(drivetrainConstants, odometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
             startSimThread();
+        }
+        try {
+            configureAutoBuilder();
+        } catch (ParseException e) {
+            DriverStation.reportError("Parse Exception", e.getStackTrace());
         }
     }
 
@@ -207,6 +217,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation, modules);
         if (Utils.isSimulation()) {
             startSimThread();
+        }
+        try {
+            configureAutoBuilder();
+        } catch (ParseException e) {
+            DriverStation.reportError("Parse Exception", e.getStackTrace());
         }
     }
 
