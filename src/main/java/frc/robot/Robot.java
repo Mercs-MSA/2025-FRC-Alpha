@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -55,6 +56,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
       boolean doRejectUpdate = false;
 
+      
+
       LimelightHelpers.SetRobotOrientation("limelight", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
       /* LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
       if(Math.abs(m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
@@ -77,6 +80,11 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+
+    Pose2d odomPose = m_robotContainer.drivetrain.getState().Pose;
+      
+    double[] array = {odomPose.getX(), odomPose.getY(), odomPose.getRotation().getDegrees()};
+      SmartDashboard.putNumberArray("Odometry Pose", array );
     
     m_robotContainer.laserDetector();
 
