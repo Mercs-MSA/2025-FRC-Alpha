@@ -39,12 +39,6 @@ public class Elevator extends SubsystemBase {
     configs.Voltage.withPeakForwardVoltage(8)
       .withPeakReverseVoltage(-8);
 
-    configs.Slot1.kP = 200; // An error of 1 rotation results in 60 A output
-    configs.Slot1.kI = 0; // No output for integrated error
-    configs.Slot1.kD = 6; // A velocity of 1 rps results in 6 A output
-    // Peak output of 120 A
-    // configs.TorqueCurrent.withPeakForwardTorqueCurrent(40)
-    //   .withPeakReverseTorqueCurrent(-40);
 
     configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 

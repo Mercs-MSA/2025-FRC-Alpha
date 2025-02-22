@@ -25,6 +25,7 @@ import frc.robot.commands.CommandPivotPos;
 import frc.robot.commands.CommandSetState;
 import frc.robot.commands.CommandPivotPos;
 import frc.robot.commands.CommandPivotPos;
+import frc.robot.commands.CommandScoreState;
 import frc.robot.commands.CommandPivotPosOpposite;
 import frc.robot.commands.CommandStopCoral;
 import frc.robot.generated.TunerConstants;
@@ -34,6 +35,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Claw;
 import frc.robot.generated.TunerConstants;
+
 
 
 /**
@@ -54,10 +56,10 @@ public class RobotContainer {
   private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
     .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05); // 5% deadzone
   
-  private final Coral m_coral = new Coral();
+  public final Coral m_coral = new Coral();
   public final Elevator m_Elevator = new Elevator();
-  private final Pivot m_Pivot = new Pivot();
-  private final Claw m_claw =new Claw();
+  public final Pivot m_Pivot = new Pivot();
+  public final Claw m_claw =new Claw();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
@@ -113,7 +115,8 @@ public class RobotContainer {
     m_driverController.pov(270).whileTrue(new CommandElevelatorPos(m_Elevator, 25.7461));
     m_driverController.x().whileTrue(new CommandPivotPosOpposite(m_Pivot, 0.0));
     m_driverController.y().whileTrue(new CommandPivotPosOpposite(m_Pivot, 2.84));
-    m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
+    m_driverController.a().whileTrue(new CommandScoreState(m_Elevator, m_Pivot));
+    //m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
     m_driverController.b().onTrue(new CommandStopCoral(m_claw));
 
 

@@ -18,9 +18,9 @@ public class CommandElevelatorPos extends Command {
    * @param subsystem The subsystem used by this command.
    */
   public CommandElevelatorPos(Elevator subsystem, double pos) {
+    addRequirements(subsystem);
     m_elevator = subsystem;
     m_pos = pos;
-
   }
 
   // Called when the command is initially scheduled.

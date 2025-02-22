@@ -44,26 +44,26 @@ public final class Constants {
     public static String state = "Move";
 
      public enum AvailableState {
-      LEVEL1(10.0, 10.0),
-      LEVEL2(20.0, 20.0),
-      LEVEL3(30.0, 30.0),
-      LEVEL4(40.0, 40.0);
+      LEVEL1(0.0, 0.0),
+      LEVEL2(5.4545, 5),
+      LEVEL3(12.9038, 2.84),
+      LEVEL4(25.7461, 5);
 
-      private double pivotPos;
       private double elevatorPos;
+      private double pivotPos;
 
-      private AvailableState(Double pivotPos, Double elevatorPos)
+      private AvailableState(double elevatorPos, double pivotPos)
       {
-        this.pivotPos = pivotPos;
         this.elevatorPos = elevatorPos;
+        this.pivotPos = pivotPos;
      }
+
+     public double elevatorPosGet() {
+      return this.elevatorPos;
+    };
 
       public double pivotPosGet() {
         return this.pivotPos;
-      };
-
-      public double elevatorPosGet() {
-        return this.elevatorPos;
       };
      }
 
