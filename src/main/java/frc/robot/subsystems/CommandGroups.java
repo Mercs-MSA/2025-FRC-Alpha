@@ -12,9 +12,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Pivot;
-import frc.robot.commands.CommandPivotPos;
-import frc.robot.commands.CommandElevelatorPos;
-import frc.robot.commands.CommandScoreCoral;
 
 public class CommandGroups extends SubsystemBase {
   Elevator m_elevator=new Elevator(); //creating new objects of all subsyystems in the constructor, as its methods call their methods
@@ -60,21 +57,19 @@ public class CommandGroups extends SubsystemBase {
   }
   public void scoreL1()
   {
-    new CommandPivotPos(m_pivot,Constants.MotorConstants.pivotStateAndValues.get("L1ThruL3"));
+
+    m_pivot.moveMethod(Constants.MotorConstants.pivotStateAndValues.get("L1ThruL3")); //replace with scoring value
     if(m_pivot.getPositionPivot()-Constants.MotorConstants.pivotStateAndValues.get("L1ThruL3")<0.2)
     {
-      new CommandElevelatorPos(m_elevator,Constants.MotorConstants.elevatorStateAndValues.get("L1") );
-      //m_elevator.moveMethod(Constants.MotorConstants.elevatorStateAndValues.get("L1"), true);
+      m_elevator.moveMethod(Constants.MotorConstants.elevatorStateAndValues.get("L1"), true);
       if(m_elevator.getPosition()-Constants.MotorConstants.elevatorStateAndValues.get("L1")<0.2)
       {
-        new CommandScoreCoral(m_claw);
-        //m_claw.setVoltage(Constants.MotorConstants.clawStateAndValues.get("cLawRunning"));
+        m_claw.setVoltage(Constants.MotorConstants.clawStateAndValues.get("cLawRunning"));
 
       }
 
       
     }
-
     
       //if() pivot is in the correct position
 
@@ -111,20 +106,18 @@ public class CommandGroups extends SubsystemBase {
 
 public void scoreL2()
 { 
-  new CommandPivotPos(m_pivot,Constants.MotorConstants.pivotStateAndValues.get("L1ThruL3"));
+  m_pivot.moveMethod(Constants.MotorConstants.pivotStateAndValues.get("L1ThruL3")); //replace with scoring value
   if(m_pivot.getPositionPivot()-Constants.MotorConstants.pivotStateAndValues.get("L1ThruL3")<0.2)
   {
-    new CommandElevelatorPos(m_elevator,Constants.MotorConstants.elevatorStateAndValues.get("L2") );
-    //m_elevator.moveMethod(Constants.MotorConstants.elevatorStateAndValues.get("L1"), true);
-    if(m_elevator.getPosition()-Constants.MotorConstants.elevatorStateAndValues.get("L2")<0.2)
+    m_elevator.moveMethod(Constants.MotorConstants.elevatorStateAndValues.get("L2"), true);
+    if(m_elevator.getPosition()-Constants.MotorConstants.elevatorStateAndValues.get("L1")<0.2);
     {
-      new CommandScoreCoral(m_claw);
-      //m_claw.setVoltage(Constants.MotorConstants.clawStateAndValues.get("cLawRunning"));
-
+      m_claw.setVoltage(Constants.MotorConstants.clawStateAndValues.get("clawRunning"));
     }
 
     
   }
+
   
   //if(Constants.MotorConstants.state[Constants.MotorConstants.elevIndex].equals("L2") );
   // {
@@ -142,21 +135,16 @@ public void scoreL2()
 }
 public void scoreL3()
 {
-  new CommandPivotPos(m_pivot,Constants.MotorConstants.pivotStateAndValues.get("L1ThruL3"));
+  m_pivot.moveMethod(Constants.MotorConstants.pivotStateAndValues.get("L1ThruL3")); //replace with scoring value
   if(m_pivot.getPositionPivot()-Constants.MotorConstants.pivotStateAndValues.get("L1ThruL3")<0.2)
   {
-    new CommandElevelatorPos(m_elevator,Constants.MotorConstants.elevatorStateAndValues.get("L3") )
-    //m_elevator.moveMethod(Constants.MotorConstants.elevatorStateAndValues.get("L1"), true);
+    m_elevator.moveMethod(Constants.MotorConstants.elevatorStateAndValues.get("L3"), true);
     if(m_elevator.getPosition()-Constants.MotorConstants.elevatorStateAndValues.get("L3")<0.2)
     {
-      new CommandScoreCoral(m_claw);
-      //m_claw.setVoltage(Constants.MotorConstants.clawStateAndValues.get("cLawRunning"));
-
+      m_claw.setVoltage(Constants.MotorConstants.clawStateAndValues.get("clawRunning"));
     }
+  }
 
-    
-  }
-  }
   
  // if(Constants.MotorConstants.state[Constants.MotorConstants.elevIndex].equals("L3") );
   // {
@@ -169,24 +157,20 @@ public void scoreL3()
 
   // }
   //same but for L3
-
+}
 public void scoreL4()
 {
-  new CommandPivotPos(m_pivot,Constants.MotorConstants.pivotStateAndValues.get("L4"));
-  if(m_pivot.getPositionPivot()-Constants.MotorConstants.pivotStateAndValues.get("L1ThruL3")<0.2)
+  m_pivot.moveMethod(Constants.MotorConstants.pivotStateAndValues.get("L4"));
+  if(m_pivot.getPositionPivot()-Constants.MotorConstants.pivotStateAndValues.get("L4")<0.2)
   {
-    new CommandElevelatorPos(m_elevator,Constants.MotorConstants.elevatorStateAndValues.get("L4") );
-    //m_elevator.moveMethod(Constants.MotorConstants.elevatorStateAndValues.get("L1"), true);
-    if(m_elevator.getPosition()-Constants.MotorConstants.elevatorStateAndValues.get("L4")<0.2)
+    m_elevator.moveMethod(Constants.MotorConstants.elevatorStateAndValues.get("L3"), true);
+    if(m_elevator.getPosition()-Constants.MotorConstants.elevatorStateAndValues.get("L3")<0.2)
     {
-      new CommandScoreCoral(m_claw);
-      //m_claw.setVoltage(Constants.MotorConstants.clawStateAndValues.get("cLawRunning"));
-
+      m_claw.setVoltage(Constants.MotorConstants.clawStateAndValues.get("clawRunning"));
     }
-
     
   }
- 
+
   
  // if(Constants.MotorConstants.state[Constants.MotorConstants.elevIndex].equals("L4") );
   

@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
       LimelightHelpers.SetRobotOrientation("limelight", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
       
       SmartDashboard.putNumber("Elevator Position", m_robotContainer.m_Elevator.getPosition());
-      SmartDashboard.putNumber("Pivot Position", m_robotContainer.m_Pivot.getPositionPivot());
+     // SmartDashboard.putNumber("Pivot Position", m_robotContainer.m_Pivot.getPositionPivot());
       /* LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
       if(Math.abs(m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
