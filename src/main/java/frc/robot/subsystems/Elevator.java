@@ -86,7 +86,11 @@ public class Elevator extends SubsystemBase {
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
+  public double getPosition()
+  {
+      return m_elevmain.getPosition().getValueAsDouble();
 
+  }
 
    public void moveMethodL1() //need to interpret this abl does not actually check anything. It is likely also not necessary when
    //tying it to the command groups, as it checks the necessary conditions. will change conditions based on a variable changed when this is successful

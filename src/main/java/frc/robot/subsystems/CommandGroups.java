@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import javax.lang.model.util.ElementScanner14;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -55,12 +57,28 @@ public class CommandGroups extends SubsystemBase {
   }
   public void scoreL1()
   {
-      if(Constants.MotorConstants.state[Constants.MotorConstants.elevIndex].equals("L1"));
+      //if() pivot is in the correct position
+
+      if(Constants.MotorConstants.state[Constants.MotorConstants.elevIndex].equals("L1") );
       {
-        m_elevator.MoveMethodL1();
+        m_claw.setVoltage(5.0);
 
       }
-      if()
+      else
+      {
+        scoreL1();
+
+      }
+
+
+      
+
+      }
+     
+
+      
+      
+      //if(m_elevator.getPosition()-Constants.MotorConstants.elevatorStateAndValues.get("L1")<0.2);
 
     //if(Constants.MotorConstants.state[Constants.MotorConstants])
     //if elevator is not at L1:
@@ -71,18 +89,52 @@ public class CommandGroups extends SubsystemBase {
     //if state/pivotpos==scoring coral pos
     // tell the "claw" to outtake the coral
     // else: call score L1 again
-}
+
 public void scoreL2()
 { 
+  
+  if(Constants.MotorConstants.state[Constants.MotorConstants.elevIndex].equals("L2") );
+  {
+    m_claw.setVoltage(5.0);
+
+  }
+  else
+  {
+    scoreL1();
+
+  }
+  
   //same but for L2
 
 }
 public void scoreL3()
 {
+  
+  if(Constants.MotorConstants.state[Constants.MotorConstants.elevIndex].equals("L3") );
+  {
+    m_claw.setVoltage(5.0);
+
+  }
+  else
+  {
+    scoreL1();
+
+  }
   //same but for L3
 }
 public void scoreL4()
 {
+  
+  if(Constants.MotorConstants.state[Constants.MotorConstants.elevIndex].equals("L4") );
+  {
+    m_claw.setVoltage(5.0);
+
+  }
+  else
+  {
+    scoreL1();
+
+  }
   //same but for L4
 }
 public void collectCoral()
