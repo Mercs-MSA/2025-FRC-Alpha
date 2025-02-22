@@ -66,7 +66,6 @@ public class RobotContainer {
   
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  static boolean laserDetect = false;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -90,11 +89,12 @@ public class RobotContainer {
     LaserCan.Measurement measurement = Robot.laser.getMeasurement();
     if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
       System.out.println("coral here");
-      laserDetect = true;
+      MotorConstants.laserDetect = true;
     } else {
-      System.out.println("coral not here");
-      laserDetect = false;
+      //System.out.println("coral not here");
+      MotorConstants.laserDetect = false;
     }
+    //System.out.println(measurement.distance_mm);
   }
 
   
@@ -106,8 +106,13 @@ public class RobotContainer {
 
    // m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
    // m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
-    m_driverController.x().onTrue(new CommandPivotPosOpposite(m_Pivot, 0.25));
-    m_driverController.y().onTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
+
+    m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.25));
+    m_driverController.pov(90).whileTrue(new CommandElevelatorPos(m_Elevator, 5.4545));
+    m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, 12.9038));
+    m_driverController.pov(270).whileTrue(new CommandElevelatorPos(m_Elevator, 25.7461));
+    m_driverController.x().whileTrue(new CommandPivotPosOpposite(m_Pivot, 0.0));
+    m_driverController.y().whileTrue(new CommandPivotPosOpposite(m_Pivot, 2.84));
     m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
     m_driverController.b().onTrue(new CommandStopCoral(m_claw));
 
@@ -131,7 +136,11 @@ public class RobotContainer {
 
     
     m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
-    m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));    
+    m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));  
+    
+    //Pivot 0 position = intake position
+    //Pivot 2.8442 position = L2/L3
+    //Pivot 5.00 position = L4
   }
 
   /**

@@ -9,8 +9,7 @@ import frc.robot.subsystems.Elevator;
 /** An example command that uses an example subsystem. */
 public class CommandElevelatorPos extends Command {
   private Elevator m_elevator;
-  private double m_pos = 0;
-  private double m_add;
+  private double m_pos;
   /**
    
   
@@ -19,23 +18,20 @@ public class CommandElevelatorPos extends Command {
    * @param subsystem The subsystem used by this command.
    */
   public CommandElevelatorPos(Elevator subsystem, double pos) {
-    addRequirements(subsystem);
     m_elevator = subsystem;
-    m_add = pos;
+    m_pos = pos;
+
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // m_pos = PivotConstants.pivotState.elevatorPosGet();
+    m_elevator.moveMethod(m_pos, true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //m_pos += m_add;
-    m_pos = m_elevator.getPosition() + m_add;
-    m_elevator.moveMethod(m_pos, true);
   }
 
   // Called once the command ends or is interrupted.

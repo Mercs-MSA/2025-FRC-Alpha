@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
     
     m_robotContainer.laserDetector();
 
-    SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);
+    //SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);
 
     CommandScheduler.getInstance().run();
   }

@@ -32,10 +32,12 @@ public final class Constants {
 
   public static class MotorConstants {
     public static final int Flywheelintake = 20;
-    public static final int IntakePivot = 2;
+    public static final int IntakePivot = 37;
     public static final int ElevatorMain = 36;
     public static final int ElevatorFollower = 38;
     public static final int CoralIntakeRPM = 30;
+
+    public static boolean laserDetect = false;
 
     public static double elevatortemppos= 0;
 

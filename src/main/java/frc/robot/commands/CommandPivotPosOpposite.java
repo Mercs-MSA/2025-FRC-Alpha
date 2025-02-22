@@ -25,19 +25,21 @@ public class CommandPivotPosOpposite extends Command {
   public CommandPivotPosOpposite(Pivot subsystem, Double add) {
     addRequirements(subsystem);
     m_add = add;
+    this.m_Pivot = subsystem;
     m_target_pos = m_Pivot.getPositionPivot() + m_add;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_currentPos = m_Pivot.getPositionPivot();
+    //m_Pivot.moveMethod(m_add);
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Pivot.moveMethod(m_target_pos);
-    m_currentPos = m_Pivot.getPositionPivot();
+    m_Pivot.moveMethod(m_add);
+    //System.out.println(m_add);
+   // m_currentPos = m_Pivot.getPositionPivot();
   }
   // Called once the command ends or is interrupted.
   @Override
@@ -46,6 +48,7 @@ public class CommandPivotPosOpposite extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(m_currentPos - m_target_pos) <= 0.2) ? true : false;
+    return true;
+    //return (Math.abs(m_currentPos - m_target_pos) <= 0.2) ? true : false;
   }
 }

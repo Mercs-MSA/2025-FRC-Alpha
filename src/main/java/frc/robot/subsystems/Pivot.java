@@ -16,11 +16,11 @@ import frc.robot.Constants.MotorConstants.AvailableState;
 import frc.robot.Constants.PivotConstants;
 
 public class Pivot extends SubsystemBase {
-  private final TalonFX pivotMotor = new TalonFX(Constants.MotorConstants.IntakePivot, "canivore");
+  private final TalonFX pivotMotor = new TalonFX(Constants.MotorConstants.IntakePivot, "rio");
   
   private final PositionVoltage pivotVoltage = new PositionVoltage(0);
 
-  private boolean isMoving = false;
+  //private boolean isMoving = false;
 
 
 
@@ -50,6 +50,7 @@ public class Pivot extends SubsystemBase {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
 
+
     /* Make sure we start at 0 */
     pivotMotor.setPosition(0);
     PivotConstants.pivotState = AvailableState.LEVEL1;
@@ -77,14 +78,16 @@ public class Pivot extends SubsystemBase {
 
   //int CurrentMotorPos
   //String DesiredMotorPos - will call to a map in constants for motor position number
+  @Override
   public void periodic() {
-    System.out.println("Pivot pos:"+ getPositionPivot());
+    //System.out.println("Pivot pos:"+ getPositionPivot());
   }
 
 
   public void moveMethod(Double DesiredMotorPos) {
     pivotMotor.setControl(pivotVoltage.withPosition(DesiredMotorPos));
     //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
+    //System.out.println(pivotVoltage.Position);
   }
 
   public void motorArrived() {
