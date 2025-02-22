@@ -4,6 +4,7 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,7 +15,7 @@ import frc.robot.Constants.OperatorConstants;
 
 public class Claw extends SubsystemBase {
     //Voltage motor initialized and configured here
-    private CANBus fake = new CANBus("temp");
+    private CANBus fake = new CANBus("rio");
     private CANrange ranger = new CANrange(Constants.ClawConstants.rangerID, fake.getName());
     public TalonFX flywheel = new TalonFX(Constants.ClawConstants.clawMotorID, fake.getName());
 
@@ -32,6 +33,7 @@ public class Claw extends SubsystemBase {
 
     public Claw() {
         ranger.getConfigurator().apply(configs);
+        flywheel.setNeutralMode(NeutralModeValue.Brake);
     }
 
     //Set voltage function

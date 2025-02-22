@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -12,7 +13,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import frc.robot.Constants;
 
 public class Coral extends SubsystemBase {
-    private final TalonFX m_main = new TalonFX(Constants.MotorConstants.Flywheelintake, "canivore");
+    private final TalonFX m_main = new TalonFX(Constants.MotorConstants.Flywheelintake, "rio");
     private final VelocityVoltage m_VelocityVoltage = new VelocityVoltage(0).withSlot(0);
     private final VelocityTorqueCurrentFOC m_VelocityTorque = new VelocityTorqueCurrentFOC(0).withSlot(0);
     private final NeutralOut m_brake = new NeutralOut();
@@ -43,6 +44,7 @@ public class Coral extends SubsystemBase {
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
       status = m_main.getConfigurator().apply(configs);
+      m_main.setNeutralMode(NeutralModeValue.Brake);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
@@ -59,7 +61,6 @@ public class Coral extends SubsystemBase {
             rpm = 0;
         }
         m_main.setControl(m_VelocityVoltage.withVelocity(rpm*state));
-        m_main.setControl(m_VelocityTorque.withVelocity(rpm*state));
     }
 
     public void CoralBrake() {

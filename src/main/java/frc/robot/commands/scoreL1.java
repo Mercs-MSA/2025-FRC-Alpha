@@ -4,34 +4,35 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.CommandGroups;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.MotorConstants.AvailableState;
-import frc.robot.Constants.PivotConstants;
 
 /** An example command that uses an example subsystem. */
-public class CommandSetState extends Command {
+public class scoreL1 extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final AvailableState currentState;
+  private final CommandGroups m_commandgroups;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CommandSetState(AvailableState in) {
-    currentState = in;
+  public scoreL1(CommandGroups commandgroups) {
+    m_commandgroups = commandgroups;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(commandgroups);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_commandgroups.scoreL1();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    PivotConstants.pivotState = currentState;
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

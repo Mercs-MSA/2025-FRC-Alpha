@@ -15,6 +15,7 @@ import frc.robot.Constants.MotorConstants.AvailableState;
 public class CommandPivotPos extends Command {
   private Pivot m_Pivot;
   private double m_pos;
+  private double m_add;
   /**
    * Creates a new ExampleCommand.
    *
@@ -22,8 +23,10 @@ public class CommandPivotPos extends Command {
    */
   public CommandPivotPos(Pivot subsystem, Double test) {
     addRequirements(subsystem);
-    m_Pivot = subsystem;
-    m_pos = test;
+    m_add = test;
+    m_pos = m_Pivot.getPositionPivot() + m_add;
+    m_Pivot.moveMethod(m_pos);
+
   }
 
   // Called when the command is initially scheduled.

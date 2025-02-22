@@ -5,7 +5,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -16,16 +18,18 @@ import frc.robot.Constants.MotorConstants.AvailableState;
 import frc.robot.Constants.PivotConstants;
 
 public class Pivot extends SubsystemBase {
-  private final TalonFX pivotMotor = new TalonFX(Constants.MotorConstants.IntakePivot, "canivore");
+  private final TalonFX pivotMotor = new TalonFX(Constants.MotorConstants.IntakePivot, "rio");
   
   private final PositionVoltage pivotVoltage = new PositionVoltage(0);
+  private final MotionMagicExpoVoltage motionMagicVoltage = new MotionMagicExpoVoltage(0);
 
-  private boolean isMoving = false;
+  //private boolean isMoving = false;
 
 
 
   public Pivot() {
     TalonFXConfiguration configs = new TalonFXConfiguration();
+    MotionMagicConfigs motionMagicCon = configs.MotionMagic;
     configs.Slot0.kP = 2.4; // An error of 1 rotation results in 2.4 V output
     configs.Slot0.kI = 0; // No output for integrated error
     configs.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
@@ -33,12 +37,12 @@ public class Pivot extends SubsystemBase {
     configs.Voltage.withPeakForwardVoltage(8)
       .withPeakReverseVoltage(-8);
 
-    configs.Slot1.kP = 60; // An error of 1 rotation results in 60 A output
-    configs.Slot1.kI = 0; // No output for integrated error
-    configs.Slot1.kD = 6; // A velocity of 1 rps results in 6 A output
-    // Peak output of 120 A
-    configs.TorqueCurrent.withPeakForwardTorqueCurrent(40)
-      .withPeakReverseTorqueCurrent(-40);
+
+      motionMagicCon.MotionMagicCruiseVelocity = 10;
+      motionMagicCon.MotionMagicAcceleration = 5;
+      motionMagicCon.MotionMagicJerk = 0;
+
+    
 
     /* Retry config apply up to 5 times, report if failure */
     StatusCode status = StatusCode.StatusCodeNotInitialized;
@@ -49,6 +53,7 @@ public class Pivot extends SubsystemBase {
     if (!status.isOK()) {
       System.out.println("Could not apply configs, error code: " + status.toString());
     }
+
 
     /* Make sure we start at 0 */
     pivotMotor.setPosition(0);
@@ -77,14 +82,24 @@ public class Pivot extends SubsystemBase {
 
   //int CurrentMotorPos
   //String DesiredMotorPos - will call to a map in constants for motor position number
+  @Override
+  public void periodic() {
+    //System.out.println("Pivot pos:"+ getPositionPivot());
+  }
+
+
   public void moveMethod(Double DesiredMotorPos) {
-    pivotMotor.setControl(pivotVoltage.withPosition(DesiredMotorPos));
+    pivotMotor.setControl(motionMagicVoltage.withPosition(DesiredMotorPos));
     //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
+    //System.out.println(pivotVoltage.Position);
   }
 
   public void motorArrived() {
     PivotConstants.pivotState = AvailableState.LEVEL2;
-  };
+  }
+  public double getPositionPivot() {
+    return (pivotMotor.getPosition().getValueAsDouble());
+  }
 
   // private boolean isMovingCheck() {
   //   return isMoving;

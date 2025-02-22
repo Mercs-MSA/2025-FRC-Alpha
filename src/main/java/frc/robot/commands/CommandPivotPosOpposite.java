@@ -4,35 +4,43 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.Pivot;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.MotorConstants.AvailableState;
+import frc.robot.Constants;
+import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.PivotConstants;
+import frc.robot.Constants.MotorConstants.AvailableState;
 
 /** An example command that uses an example subsystem. */
-public class CommandSetState extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final AvailableState currentState;
-
+public class CommandPivotPosOpposite extends Command {
+  private Pivot m_Pivot;
+  private double m_target_pos;
+  private double m_add;
+  private double m_currentPos;
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CommandSetState(AvailableState in) {
-    currentState = in;
+  public CommandPivotPosOpposite(Pivot subsystem, Double add) {
+    addRequirements(subsystem);
+    m_add = add;
+    this.m_Pivot = subsystem;
+    m_target_pos = m_Pivot.getPositionPivot() + m_add;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    //m_Pivot.moveMethod(m_add);
   }
-
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    PivotConstants.pivotState = currentState;
+    m_Pivot.moveMethod(m_add);
+    //System.out.println(m_add);
+   // m_currentPos = m_Pivot.getPositionPivot();
   }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
@@ -41,5 +49,6 @@ public class CommandSetState extends Command {
   @Override
   public boolean isFinished() {
     return true;
+    //return (Math.abs(m_currentPos - m_target_pos) <= 0.2) ? true : false;
   }
 }
