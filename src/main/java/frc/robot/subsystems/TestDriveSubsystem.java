@@ -5,6 +5,8 @@ import static edu.wpi.first.units.Units.*;
 import java.io.IOException;
 import java.util.function.Supplier;
 
+import org.json.simple.parser.ParseException;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -19,7 +21,6 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.util.struct.parser.ParseException;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -34,12 +35,10 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
  */
-public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+public class TestDriveSubsystem extends TunerSwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-    RobotConfig config;
-    private SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -47,29 +46,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final Rotation2d kRedAlliancePerspectiveRotation = Rotation2d.k180deg;
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean m_hasAppliedOperatorPerspective = false;
+    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
     /* Swerve requests to apply during SysId characterization */
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
-
-    public void configureAutoBuilder() throws ParseException{
-        try{
-            config = RobotConfig.fromGUISettings();
-            AutoBuilder.configure(() -> getState().Pose,
-             this::resetPose,
-              () -> getState().Speeds,
-               (speeds, feedforward) -> setControl(m_pathApplyRobotSpeeds.withSpeeds(speeds)
-               .withWheelForceFeedforwardsX(feedforward.robotRelativeForcesXNewtons())
-               .withWheelForceFeedforwardsY(feedforward.robotRelativeForcesYNewtons())),
-                new PPHolonomicDriveController(new PIDConstants(10,0,0), new PIDConstants(7,0,0)), 
-                config,() -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, 
-                this);
-        }
-        catch(Exception e){
-            DriverStation.reportError("Error", e.getStackTrace());
-        }
-    }
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -143,7 +125,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * @param drivetrainConstants   Drivetrain-wide constants for the swerve drive
      * @param modules               Constants for each specific module
      */
-    public CommandSwerveDrivetrain(
+    public TestDriveSubsystem(
         SwerveDrivetrainConstants drivetrainConstants,
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
@@ -151,13 +133,32 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
-        try {
-            configureAutoBuilder();
-        } catch (ParseException e) {
-            DriverStation.reportError("Parse Exception", e.getStackTrace());
-        }
+        configureAutoBuilder();
+
     }
 
+    RobotConfig config;
+
+    public void configureAutoBuilder(){
+        try{
+            config = RobotConfig.fromGUISettings();
+            AutoBuilder.configure(() -> getState().Pose,
+             this::resetPose,
+              () -> getState().Speeds,
+               (speeds, feedforward) -> setControl(m_pathApplyRobotSpeeds.withSpeeds(speeds)
+               .withWheelForceFeedforwardsX(feedforward.robotRelativeForcesXNewtons())
+               .withWheelForceFeedforwardsY(feedforward.robotRelativeForcesYNewtons())),
+                new PPHolonomicDriveController(new PIDConstants(10,0,0), new PIDConstants(7,0,0)), 
+                config,() -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red, 
+                this);
+        }
+        catch(ParseException e ){
+            DriverStation.reportError("Parsing Error", e.getStackTrace());
+
+        } catch(IOException e){
+            DriverStation.reportError("IO Error", e.getStackTrace());
+        }
+    }
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
      * <p>
@@ -171,7 +172,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      *                                CAN FD, and 100 Hz on CAN 2.0.
      * @param modules                 Constants for each specific module
      */
-    public CommandSwerveDrivetrain(
+    public TestDriveSubsystem(
         SwerveDrivetrainConstants drivetrainConstants,
         double odometryUpdateFrequency,
         SwerveModuleConstants<?, ?, ?>... modules
@@ -180,11 +181,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
-        try {
-            configureAutoBuilder();
-        } catch (ParseException e) {
-            DriverStation.reportError("Parse Exception", e.getStackTrace());
-        }
+        configureAutoBuilder();
     }
 
     /**
@@ -206,7 +203,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      *                                  and radians
      * @param modules                   Constants for each specific module
      */
-    public CommandSwerveDrivetrain(
+    public TestDriveSubsystem(
         SwerveDrivetrainConstants drivetrainConstants,
         double odometryUpdateFrequency,
         Matrix<N3, N1> odometryStandardDeviation,
@@ -217,11 +214,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
-        try {
-            configureAutoBuilder();
-        } catch (ParseException e) {
-            DriverStation.reportError("Parse Exception", e.getStackTrace());
-        }
+        configureAutoBuilder();
     }
 
     /**

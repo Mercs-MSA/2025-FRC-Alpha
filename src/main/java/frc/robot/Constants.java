@@ -3,20 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
-import java.util.HashMap;
-import java.util.Map;
-
-import edu.wpi.first.math.controller.ElevatorFeedforward;
-import frc.robot.Constants.MotorConstants.AvailableState;
-import frc.robot.Constants.PivotConstants;
 
 import com.ctre.phoenix6.CANBus;
-
-import com.ctre.phoenix6.CANBus;
-
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.numbers.N3;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
