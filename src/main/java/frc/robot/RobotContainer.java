@@ -11,6 +11,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import au.grapplerobotics.LaserCan;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -133,6 +134,10 @@ public class RobotContainer {
     m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
     m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));    
   }
+
+public void getAutonomousCommand() {
+
+}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -1,44 +1,44 @@
-package frc.robot;
+// package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.TestCommand;
-import frc.robot.subsystems.OneMotorSystem;
+// import edu.wpi.first.wpilibj.TimedRobot;
+// import edu.wpi.first.wpilibj.XboxController;
+// import edu.wpi.first.wpilibj.PS4Controller.Button;
+// import edu.wpi.first.wpilibj2.command.Command;
+// import edu.wpi.first.wpilibj2.command.Commands;
+// import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+// import frc.robot.Constants.OperatorConstants;
+// import frc.robot.commands.TestCommand;
+// import frc.robot.subsystems.OneMotorSystem;
 
 
-public class TestRobot extends TimedRobot{
-    private final OneMotorSystem oneMotorSystem = new OneMotorSystem();
-    private final TestRobotContainer robotContainer = new TestRobotContainer();
+// public class TestRobot extends TimedRobot{
+//     private final OneMotorSystem oneMotorSystem = new OneMotorSystem();
+//     private final TestRobotContainer robotContainer = new TestRobotContainer();
     
-    private final CommandXboxController controller = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+//     private final CommandXboxController controller = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-    private final Command command = robotContainer.getTeleOpCommand();
-    private final Command autocommand = robotContainer.getAutoCommand();
+//     private final Command command = robotContainer.getTeleOpCommand();
+//     private final Command autocommand = robotContainer.getAutoCommand();
 
 
-    @Override
-    public void teleopPeriodic() {
-        controller.a().onTrue(command);
-    }
+//     @Override
+//     public void teleopPeriodic() {
+//         controller.a().onTrue(command);
+//     }
 
-    public TestRobot(){
+//     public TestRobot(){
         
-    }
+//     }
 
 
-    @Override
-    public void autonomousInit(){
-        autocommand.schedule();
-    }
+//     @Override
+//     public void autonomousInit(){
+//         autocommand.schedule();
+//     }
 
     
 
 
 
 
-}
+// }
