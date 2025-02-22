@@ -83,8 +83,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);
 
     CommandScheduler.getInstance().run();
-
-    
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -95,6 +93,9 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {}
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  //@Override
+ /*  public void autonomousInit() {
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
   @Override
   public void autonomousInit() {
     // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -122,7 +123,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {};
 
   @Override
   public void testInit() {
