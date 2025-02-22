@@ -32,14 +32,14 @@ public class Elevator extends SubsystemBase {
     m_elevfollower.setControl(new Follower(MotorConstants.ElevatorMain, false));
     TalonFXConfiguration configs = new TalonFXConfiguration();
     MotionMagicConfigs motionMagicCon = configs.MotionMagic;
-    configs.Slot0.kP = 2.4; // An error of 1 rotation results in 2.4 V output
+    configs.Slot0.kP = 1; // An error of 1 rotation results in 2.4 V output
     configs.Slot0.kI = 0; // No output for integrated error
     configs.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
     // Peak output of 8 V
     configs.Voltage.withPeakForwardVoltage(8)
       .withPeakReverseVoltage(-8);
 
-    configs.Slot1.kP = 100; // An error of 1 rotation results in 60 A output
+    configs.Slot1.kP = 200; // An error of 1 rotation results in 60 A output
     configs.Slot1.kI = 0; // No output for integrated error
     configs.Slot1.kD = 6; // A velocity of 1 rps results in 6 A output
     // Peak output of 120 A

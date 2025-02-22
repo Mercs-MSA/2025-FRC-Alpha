@@ -4,6 +4,7 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,6 +33,7 @@ public class Claw extends SubsystemBase {
 
     public Claw() {
         ranger.getConfigurator().apply(configs);
+        flywheel.setNeutralMode(NeutralModeValue.Brake);
     }
 
     //Set voltage function

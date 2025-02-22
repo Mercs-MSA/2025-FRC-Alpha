@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -43,6 +44,7 @@ public class Coral extends SubsystemBase {
     StatusCode status = StatusCode.StatusCodeNotInitialized;
     for (int i = 0; i < 5; ++i) {
       status = m_main.getConfigurator().apply(configs);
+      m_main.setNeutralMode(NeutralModeValue.Brake);
       if (status.isOK()) break;
     }
     if (!status.isOK()) {
