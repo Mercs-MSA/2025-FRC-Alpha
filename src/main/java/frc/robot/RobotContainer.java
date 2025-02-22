@@ -19,13 +19,13 @@ import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CommandCoral;
 import frc.robot.commands.CommandElevelatorPos;
-import frc.robot.commands.CommandCollectCoral;
+//import frc.robot.commands.CommandCollectCoral;
 import frc.robot.commands.CommandScoreCoral;
 import frc.robot.commands.CommandPivotPos;
-import frc.robot.commands.CommandSetState;
+//import frc.robot.commands.CommandSetState;
 import frc.robot.commands.CommandPivotPos;
 import frc.robot.commands.CommandPivotPos;
-import frc.robot.commands.CommandScoreState;
+//import frc.robot.commands.CommandScoreState;
 import frc.robot.commands.CommandPivotPosOpposite;
 import frc.robot.commands.CommandStopCoral;
 import frc.robot.commands.scoreL1;
@@ -119,8 +119,8 @@ public class RobotContainer {
     m_driverController.x().whileTrue(new CommandPivotPosOpposite(m_Pivot, 0.0));
     m_driverController.y().whileTrue(new CommandPivotPosOpposite(m_Pivot, 2.84));
     //m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
-    m_driverController.b().onTrue(new scoreL1(m_commandgroups));
-    m_driverController.b().onTrue(new scoreL2(m_commandgroups));
+    m_driverController.b().whileTrue(new scoreL1(m_commandgroups));
+    m_driverController.a().whileTrue(new scoreL2(m_commandgroups));
 
     //m_driverController.b().onTrue(new CommandStopCoral(m_claw));
 

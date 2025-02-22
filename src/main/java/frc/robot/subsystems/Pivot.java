@@ -14,8 +14,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.MotorConstants.AvailableState;
-import frc.robot.Constants.PivotConstants;
+//import frc.robot.Constants.MotorConstants.AvailableState;
+//import frc.robot.Constants.PivotConstants;
 
 public class Pivot extends SubsystemBase {
   private final TalonFX pivotMotor = new TalonFX(Constants.MotorConstants.IntakePivot, "rio");
@@ -57,7 +57,7 @@ public class Pivot extends SubsystemBase {
 
     /* Make sure we start at 0 */
     pivotMotor.setPosition(0);
-    PivotConstants.pivotState = AvailableState.LEVEL1;
+    //PivotConstants.pivotState = AvailableState.LEVEL1;
   }
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
@@ -95,7 +95,7 @@ public class Pivot extends SubsystemBase {
   }
 
   public void motorArrived() {
-    PivotConstants.pivotState = AvailableState.LEVEL2;
+    //PivotConstants.pivotState = AvailableState.LEVEL2;
   }
   public double getPositionPivot() {
     return (pivotMotor.getPosition().getValueAsDouble());

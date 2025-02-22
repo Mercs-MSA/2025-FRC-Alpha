@@ -8,8 +8,8 @@ import frc.robot.subsystems.Pivot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.MotorConstants;
-import frc.robot.Constants.PivotConstants;
-import frc.robot.Constants.MotorConstants.AvailableState;
+//import frc.robot.Constants.PivotConstants;
+//import frc.robot.Constants.MotorConstants.AvailableState;
 
 /** An example command that uses an example subsystem. */
 public class CommandPivotPos extends Command {
@@ -31,7 +31,9 @@ public class CommandPivotPos extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
+  public void initialize() 
+  {
+
     //m_pos = PivotConstants.pivotState.pivotPosGet();
     m_Pivot.moveMethod(m_pos);
   }

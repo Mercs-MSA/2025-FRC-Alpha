@@ -16,8 +16,8 @@ import frc.robot.Constants.OperatorConstants;
 public class Claw extends SubsystemBase {
     //Voltage motor initialized and configured here
     private CANBus fake = new CANBus("rio");
-    private CANrange ranger = new CANrange(Constants.ClawConstants.rangerID, fake.getName());
-    public TalonFX flywheel = new TalonFX(Constants.ClawConstants.clawMotorID, fake.getName());
+    //private CANrange ranger = new CANrange(Constants.ClawConstants.rangerID, fake.getName());
+    public TalonFX flywheel = new TalonFX(Constants.MotorConstants.Flywheelintake, fake.getName());
 
     CANrangeConfiguration configs = new CANrangeConfiguration();
 
@@ -32,7 +32,7 @@ public class Claw extends SubsystemBase {
     private static CLAW_STATES currentClawState = CLAW_STATES.STOPPED_STATE;
 
     public Claw() {
-        ranger.getConfigurator().apply(configs);
+        //ranger.getConfigurator().apply(configs);
         flywheel.setNeutralMode(NeutralModeValue.Brake);
     }
 
@@ -46,9 +46,7 @@ public class Claw extends SubsystemBase {
         return flywheel.getMotorVoltage().getValueAsDouble();
     }
 
-    public double getDistance() {
-        return ranger.getDistance().getValueAsDouble();
-    }
+    
 
     @Override
     public void periodic() {
