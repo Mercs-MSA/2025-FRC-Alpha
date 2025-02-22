@@ -18,9 +18,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.MotorConstants.AvailableState;
+//import frc.robot.Constants.MotorConstants.AvailableState;
 import frc.robot.Constants.MotorConstants;
-import frc.robot.Constants.PivotConstants;
+//import frc.robot.Constants.PivotConstants;
 
 public class Elevator extends SubsystemBase {
   private final TalonFX m_elevmain = new TalonFX(Constants.MotorConstants.ElevatorMain, "rio");

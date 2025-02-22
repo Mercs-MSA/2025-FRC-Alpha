@@ -14,7 +14,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.MotorConstants.AvailableState;
+//import frc.robot.Constants.MotorConstants.AvailableState;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CommandCoral;
@@ -28,6 +28,8 @@ import frc.robot.commands.CommandPivotPos;
 import frc.robot.commands.CommandScoreState;
 import frc.robot.commands.CommandPivotPosOpposite;
 import frc.robot.commands.CommandStopCoral;
+import frc.robot.commands.scoreL1;
+import frc.robot.commands.scoreL2;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Coral;
@@ -35,7 +37,7 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Claw;
 import frc.robot.generated.TunerConstants;
-
+import frc.robot.subsystems.CommandGroups;
 
 
 /**
@@ -58,8 +60,9 @@ public class RobotContainer {
   
   public final Coral m_coral = new Coral();
   public final Elevator m_Elevator = new Elevator();
-  public final Pivot m_Pivot = new Pivot();
-  public final Claw m_claw =new Claw();
+  private final Pivot m_Pivot = new Pivot();
+  private final Claw m_claw =new Claw();
+  private final CommandGroups m_commandgroups=new CommandGroups();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
@@ -115,9 +118,11 @@ public class RobotContainer {
     m_driverController.pov(270).whileTrue(new CommandElevelatorPos(m_Elevator, 25.7461));
     m_driverController.x().whileTrue(new CommandPivotPosOpposite(m_Pivot, 0.0));
     m_driverController.y().whileTrue(new CommandPivotPosOpposite(m_Pivot, 2.84));
-    m_driverController.a().whileTrue(new CommandScoreState(m_Elevator, m_Pivot));
     //m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
-    m_driverController.b().onTrue(new CommandStopCoral(m_claw));
+    m_driverController.b().onTrue(new scoreL1(m_commandgroups));
+    m_driverController.b().onTrue(new scoreL2(m_commandgroups));
+
+    //m_driverController.b().onTrue(new CommandStopCoral(m_claw));
 
 
 

@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-import frc.robot.Constants.MotorConstants.AvailableState;
-import frc.robot.Constants.PivotConstants;
+//import frc.robot.Constants.MotorConstants.AvailableState;
+//import frc.robot.Constants.PivotConstants;
 
 import com.ctre.phoenix6.CANBus;
 
@@ -38,34 +38,76 @@ public final class Constants {
     public static final int CoralIntakeRPM = 30;
 
     public static boolean laserDetect = false;
+    public static String elevState=null;
+    public static HashMap <String,Double> elevatorStateAndValues=new HashMap<>();
+    public static void setValuesElev()
+    {
+    elevatorStateAndValues.put("restPos",0.0); 
+    elevatorStateAndValues.put("coralIntake",20.0);
+    elevatorStateAndValues.put("L1",0.25);
+    elevatorStateAndValues.put("L2",5.4545);
+    elevatorStateAndValues.put("L3",12.9038);
+    elevatorStateAndValues.put("L4",25.7461);
+    elevatorStateAndValues.put("Barge",70.0); //not measured
+    }
+    //states pivot
+    public static String pivotState=null;
+    public static HashMap <String,Double> pivotStateAndValues=new HashMap<>();
+    public static void setValuesPivot()
+    {
+    pivotStateAndValues.put("barge",40.0); //not measured yet
+    pivotStateAndValues.put("algaeCollectReef",0.0);
+    pivotStateAndValues.put("processor",20.0); //not measured yet
+    pivotStateAndValues.put("L4",5.00);
+    pivotStateAndValues.put("L1ThruL3",2.8442);
+    }
+    //states coral intake/claw
+    public static String clawState=null;
+    public static HashMap <String,Double> clawStateAndValues=new HashMap<>();
+    public static void setValuesClaw()
+    {
+    clawStateAndValues.put("clawRunning",-4.0); //on or off
+    clawStateAndValues.put("clawOff",0.0); 
+    
+    }
+    //states algae intake
+    public static String algaeIntakeState=null;
+    public static HashMap <String,Double> algaeIntakeStateAndValues=new HashMap<>();
+    public static void setValuesAlgaeIntake()
+    {
+    elevatorStateAndValues.put("algaeIntakeRunning",1.0); //on or off
+    elevatorStateAndValues.put("algaeIntakeOff",0.0); 
+    
+    } 
+  }
 
-    public static double elevatortemppos= 0;
+    // public static double elevatortemppos= 0;
 
-    public static String state = "Move";
+    // public static String state = "Move";
 
-     public enum AvailableState {
-      LEVEL1(0.0, 0.0),
-      LEVEL2(5.4545, 5),
-      LEVEL3(12.9038, 2.84),
-      LEVEL4(25.7461, 5);
+    //  public enum AvailableState {
+    //   LEVEL1(10.0, 10.0),
+    //   LEVEL2(20.0, 20.0),
+    //   LEVEL3(30.0, 30.0),
+    //   LEVEL4(40.0, 40.0);
 
-      private double elevatorPos;
-      private double pivotPos;
+    //   private double pivotPos;
+    //   private double elevatorPos;
 
-      private AvailableState(double elevatorPos, double pivotPos)
-      {
-        this.elevatorPos = elevatorPos;
-        this.pivotPos = pivotPos;
-     }
+    //   private AvailableState(Double pivotPos, Double elevatorPos)
+    //   {
+    //     this.pivotPos = pivotPos;
+    //     this.elevatorPos = elevatorPos;
+    //  }
 
-     public double elevatorPosGet() {
-      return this.elevatorPos;
-    };
+    //   public double pivotPosGet() {
+    //     return this.pivotPos;
+    //   };
 
-      public double pivotPosGet() {
-        return this.pivotPos;
-      };
-     }
+    //   public double elevatorPosGet() {
+    //     return this.elevatorPos;
+    //   };
+     
 
 
     // public static final Map<AvailableState,Double> pivotMotorPositions = new HashMap<AvailableState,Double>() {{
@@ -89,7 +131,7 @@ public final class Constants {
     //MoveToAlgae - Number state (constants)
     //MoveToProcessor - Number state (constants)
     //MoveToBarge - Number state (constants)
-  }
+  
 
 
 
@@ -113,25 +155,25 @@ public final class Constants {
         public static final String limelightBackName = "limelight-back";
         public static final Vector<N3> visionStdDevs = VecBuilder.fill(.7,.7,9999999);
     }
-  public class PivotConstants
-  {
-      public static AvailableState pivotState = AvailableState.LEVEL1;
-  }
+  // public class PivotConstants
+  // {
+  //     public static AvailableState pivotState = AvailableState.LEVEL1;
+  // }
   
-  public static class ClawConstants {
-    public static int clawMotorID = 21;
-    public static int rangerID = 14;
+  // public static class ClawConstants {
+  //   public static int clawMotorID = 21;
+  //   public static int rangerID = 14;
 
-    public enum clawState {
-      CORAL_INTAKING_STATE,
-      CORAL_SCORING_STATE,
-      ALGAE_INTAKING_STATE,
-      ALGAE_SCORING_STATE,
-      CORAL_HOLDING_STATE,
-      ALGAE_HOLDING_STATE
-    }
+  //   public enum clawState {
+  //     CORAL_INTAKING_STATE,
+  //     CORAL_SCORING_STATE,
+  //     ALGAE_INTAKING_STATE,
+  //     ALGAE_SCORING_STATE,
+  //     CORAL_HOLDING_STATE,
+  //     ALGAE_HOLDING_STATE
+  //   }
 
-    public static double timeforclawtorun = 0.2;
-    public static double clawVoltage = 6;
-  }
+  //   public static double timeforclawtorun = 0.2;
+  //   public static double clawVoltage = 6;
+
 }
