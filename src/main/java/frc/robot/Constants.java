@@ -47,6 +47,8 @@ public final class Constants {
 
     public static boolean cancelstate = false;
 
+    public static AvailableState toState = AvailableState.LEVEL1;
+
      public enum AvailableState {
       LEVEL1(0.35, 0.0),
       LEVEL2(5.4545, 2.9),
@@ -55,7 +57,7 @@ public final class Constants {
       LEVEL2ALGAE(5.4545, 21.0),
       LEVEL3ALGAE(12.9038, 21.0),
       COOP(0.35, 21.0),
-      BARGE(25.746, 21.0);
+      BARGE(26.746, 21.0);
 
       private double elevatorPos;
       private double pivotPos;

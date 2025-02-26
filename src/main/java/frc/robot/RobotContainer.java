@@ -26,6 +26,7 @@ import frc.robot.commands.CommandCollectCoral;
 import frc.robot.commands.CommandScoreCoral;
 import frc.robot.commands.CommandToState;
 import frc.robot.commands.CommandSetState;
+import frc.robot.commands.CommandSetToState;
 // import frc.robot.commands.CommandPivotPosOpposite;
 import frc.robot.commands.CommandStopCoral;
 import frc.robot.generated.TunerConstants;
@@ -53,7 +54,7 @@ public class RobotContainer {
   private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
   
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-    .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05); // 5% deadzone
+    .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1); // 10% deadzone
   
   private final Coral m_coral = new Coral();
   public final Elevator m_Elevator = new Elevator();
@@ -87,7 +88,6 @@ public class RobotContainer {
 
   public void laserDetector() {
     LaserCan.Measurement measurement = Robot.laser.getMeasurement();
-    System.out.println(measurement);
     if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm <= 100) {
       System.out.println(measurement.distance_mm);
       MotorConstants.laserDetect = true;
@@ -114,25 +114,27 @@ public class RobotContainer {
 
 
 
-    m_operatorController.pov(180).onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL1));
-    m_operatorController.pov(270).onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL2));
-    m_operatorController.pov(0).onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL3));
-    m_operatorController.pov(90).onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL4));
+    m_operatorController.pov(180).onTrue(new CommandSetToState(AvailableState.LEVEL1));
+    m_operatorController.pov(270).onTrue(new CommandSetToState(AvailableState.LEVEL2));
+    m_operatorController.pov(0).onTrue(new CommandSetToState(AvailableState.LEVEL3));
+    m_operatorController.pov(90).onTrue(new CommandSetToState(AvailableState.LEVEL4));
 
-    m_operatorController.y().onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL2ALGAE));
-    m_operatorController.b().onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL1));
-    m_operatorController.a().onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.COOP));
-    m_operatorController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.BARGE));
-
+    // m_operatorController.y().onTrue(new CommandSetToState(AvailableState.LEVEL2ALGAE));
+    // m_operatorController.a().onTrue(new CommandSetToState(AvailableState.COOP));
+    // m_operatorController.x().onTrue(new CommandSetToState(AvailableState.BARGE));
 
 
-    m_operatorController.leftBumper().whileTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL2ALGAE));
-    m_operatorController.rightBumper().whileTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL3ALGAE));
+
+    // m_operatorController.leftBumper().whileTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL2ALGAE));
+    // m_operatorController.rightBumper().whileTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL3ALGAE));
 
     m_driverController.leftTrigger(0.8).onTrue(new CommandScoreCoral(m_claw, false));
     m_driverController.rightTrigger(0.8).onTrue(new CommandStopCoral(m_claw));
+
     m_driverController.leftBumper().whileTrue(new CommandScoreCoral(m_claw, false));
     m_driverController.rightBumper().whileTrue(new CommandScoreCoral(m_claw, true));
+
+    m_driverController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
 
 
 
