@@ -21,7 +21,6 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CommandCoral;
 import frc.robot.commands.CommandElevelatorPos;
 import frc.robot.commands.CommandFreePivot;
-import frc.robot.commands.CommandCancel;
 import frc.robot.commands.CommandCollectCoral;
 import frc.robot.commands.CommandScoreCoral;
 import frc.robot.commands.CommandToState;
@@ -88,63 +87,45 @@ public class RobotContainer {
 
   public void laserDetector() {
     LaserCan.Measurement measurement = Robot.laser.getMeasurement();
+    //only returns true for distances equal to or less than 100mm/10cm so it shouldnt accidently be triggered
     if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm <= 100) {
-      System.out.println(measurement.distance_mm);
       MotorConstants.laserDetect = true;
     } else {
-      //System.out.println("coral not here");
       MotorConstants.laserDetect = false;
     }
   }
-
+ 
   
   private void configureBindings() {
-    // m_driverController.a().onTrue(new IntakeCommand(m_CoralIntake));
-    // m_driverController.b().onTrue(new OuttakeCommand(m_CoralIntake));
-    // m_driverController.x().onTrue(new FlipIntakeCommand(m_CoralIntake));
 
 
-   // m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
-   // m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
-    // m_driverController.x().onTrue(new CommandPivotPosOpposite(m_Pivot, 0.25));
-    // m_driverController.y().onTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
-    // m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
-    // m_driverController.b().onTrue(new CommandStopCoral(m_claw));
-
-
-
-
+    //4 commands send elevator state to a buffer variable to be later called by driver
     m_operatorController.pov(180).onTrue(new CommandSetToState(AvailableState.LEVEL1));
     m_operatorController.pov(270).onTrue(new CommandSetToState(AvailableState.LEVEL2));
     m_operatorController.pov(0).onTrue(new CommandSetToState(AvailableState.LEVEL3));
     m_operatorController.pov(90).onTrue(new CommandSetToState(AvailableState.LEVEL4));
 
-    // m_operatorController.y().onTrue(new CommandSetToState(AvailableState.LEVEL2ALGAE));
-    // m_operatorController.a().onTrue(new CommandSetToState(AvailableState.COOP));
-    // m_operatorController.x().onTrue(new CommandSetToState(AvailableState.BARGE));
+    //Resets elevator and pivot to bottom by control of operator
+    m_operatorController.b().onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL1));
 
-
-
-    // m_operatorController.leftBumper().whileTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL2ALGAE));
-    // m_operatorController.rightBumper().whileTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL3ALGAE));
-
+    //Left trigger starts into. Right trigger stops, should normally need to be used to stop it after scoring
     m_driverController.leftTrigger(0.8).onTrue(new CommandScoreCoral(m_claw, false));
     m_driverController.rightTrigger(0.8).onTrue(new CommandStopCoral(m_claw));
 
-    m_driverController.leftBumper().whileTrue(new CommandScoreCoral(m_claw, false));
-    m_driverController.rightBumper().whileTrue(new CommandScoreCoral(m_claw, true));
+    //For future use with Algae
+    // m_driverController.leftBumper().whileTrue(new CommandScoreCoral(m_claw, false));
+    // m_driverController.rightBumper().whileTrue(new CommandScoreCoral(m_claw, true));
 
+    //Uses the buffer variable for the elevator state and sets it to that state
     m_driverController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
 
 
 
     
-    // m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
-    // m_driverController.b().onTrue(new CommandStopCoral(m_claw));
 
 
-    // Deadzone is 5%
 
+    // Deadzone is 10%
     drivetrain.setDefaultCommand(
       // Drivetrain will execute this command periodically
       drivetrain.applyRequest(() ->
@@ -155,14 +136,8 @@ public class RobotContainer {
   );
 
     
-
-  m_driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric())); //Seed
-    // m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, 5.0));
-    // m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
-
-    
-    // m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
-    // m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));    
+    //Seeds robot for field centric. To seed, face the robot facing the direction opposite of the driver stations then hit Y
+    m_driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric())); //Seed  
   }
 
 public void getAutonomousCommand() {

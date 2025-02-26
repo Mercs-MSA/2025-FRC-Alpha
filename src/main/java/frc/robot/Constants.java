@@ -39,14 +39,10 @@ public final class Constants {
     public static final int ElevatorFollower = 38;
     public static final int CoralIntakeRPM = 30;
 
-    public static double elevatortemppos= 0;
-
-    public static String state = "Move";
-
+    //Constant for the ScoreCoral command to know when to stop
     public static boolean laserDetect = false;
 
-    public static boolean cancelstate = false;
-
+    //Buffer variable for the Driver to decide when to move elevator. Changed by operator pov pad controls
     public static AvailableState toState = AvailableState.LEVEL1;
 
      public enum AvailableState {
@@ -76,29 +72,6 @@ public final class Constants {
         return this.pivotPos;
       };
      }
-
-
-    // public static final Map<AvailableState,Double> pivotMotorPositions = new HashMap<AvailableState,Double>() {{
-    //   put(AvailableState.LEVEL1, 10.0);
-    //   put(AvailableState.LEVEL2, 20.0);
-    //   put(AvailableState.LEVEL3, 30.0);
-    //   put(AvailableState.LEVEL4, 40.0);
-
-    //   //Pivot motor position is dependent on elevator position,
-    //   //instead could be a mode for pivot from operator side that checks if elevator position is ok
-    //   // put(AvailableState.ALGAE, 50.0);
-    //   // put("MoveToProcessor", 60.0);
-    //   // put("MoveToBarge", 70.0);
-    // }};
-
-    //MoveToIntakePosition - Number state (constants)
-    //MoveToCoral1 - Number state (constants)
-    //MoveToCoral2and3 - Number state (constants)
-    //MoveToCoral4 - Number state (constants)
-
-    //MoveToAlgae - Number state (constants)
-    //MoveToProcessor - Number state (constants)
-    //MoveToBarge - Number state (constants)
   }
 
 
@@ -106,16 +79,6 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
-  //   public static final int MotorFWM_ID = 0;
-  // public static final int MotorFM_ID = 1;
-  // public static final int FLMDIOPort = 0;
-  // public static final double coralIntakingPos= 0; //will fix
-  // public static final double coralOutakingPos=360; //will fix
-
-
-  // public static final int BLMDIOPort = 1;
-
-
   }
 
   public static final class VisionConstants {

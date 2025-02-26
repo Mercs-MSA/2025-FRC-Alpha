@@ -6,18 +6,19 @@ package frc.robot.commands;
 
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.MotorConstants.AvailableState;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
-/** An example command that uses an example subsystem. */
+/** Takes input AvailableState enum and sends it to the constant
+ *  buffer variable toState to be used in CommandToState by driver
+*/
 public class CommandSetToState extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private AvailableState m_cancelstate;
 
   /**
-   * Creates a new ExampleCommand.
+   * Takes input AvailableStatee enum from constants
    *
-   * @param subsystem The subsystem used by this command.
+   * @param cancelstate Input AvailableState enum
    */
   public CommandSetToState(AvailableState cancelstate) {
     m_cancelstate = cancelstate;
@@ -26,6 +27,7 @@ public class CommandSetToState extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    //updates buffer variable in Constants from the operator so the driver can use it
     MotorConstants.toState = m_cancelstate;
   }
 
