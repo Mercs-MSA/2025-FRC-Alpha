@@ -5,10 +5,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,23 +25,25 @@ public class Elevator extends SubsystemBase {
   private final TalonFX m_elevmain = new TalonFX(Constants.MotorConstants.ElevatorMain, "rio");
   private final TalonFX m_elevfollower = new TalonFX(Constants.MotorConstants.ElevatorFollower, "rio");
   private final PositionVoltage elevatorVoltage = new PositionVoltage(0);
+  private final MotionMagicExpoVoltage elevatorMotionMagicVoltage = new MotionMagicExpoVoltage(0);
 
   public Elevator() {
     m_elevfollower.setControl(new Follower(MotorConstants.ElevatorMain, false));
     TalonFXConfiguration configs = new TalonFXConfiguration();
-    configs.Slot0.kP = 2.4; // An error of 1 rotation results in 2.4 V output
-    configs.Slot0.kI = 0; // No output for integrated error
+    MotionMagicConfigs motionMagicCon = configs.MotionMagic;
+    configs.Slot0.kP = 5; // An error of 1 rotation results in 2.4 V output
+    configs.Slot0.kI = 0.5; // No output for integrated error
     configs.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
+    configs.Slot0.kG = 0;
     // Peak output of 8 V
     configs.Voltage.withPeakForwardVoltage(8)
       .withPeakReverseVoltage(-8);
 
-    configs.Slot1.kP = 60; // An error of 1 rotation results in 60 A output
-    configs.Slot1.kI = 0; // No output for integrated error
-    configs.Slot1.kD = 6; // A velocity of 1 rps results in 6 A output
-    // Peak output of 120 A
-    configs.TorqueCurrent.withPeakForwardTorqueCurrent(40)
-      .withPeakReverseTorqueCurrent(-40);
+    motionMagicCon.MotionMagicCruiseVelocity = 30;
+    motionMagicCon.MotionMagicAcceleration = 10;
+    motionMagicCon.MotionMagicJerk = 0;
+
+    configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     /* Retry config apply up to 5 times, report if failure */
     StatusCode status1 = StatusCode.StatusCodeNotInitialized;
@@ -89,7 +94,7 @@ public class Elevator extends SubsystemBase {
 
    public void moveMethod(Double DesiredMotorPos, boolean Able) {
     if (Able == true) {
-      m_elevmain.setControl(elevatorVoltage.withPosition(DesiredMotorPos));
+      m_elevmain.setControl(elevatorMotionMagicVoltage.withPosition(DesiredMotorPos));
       //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
     }
   }

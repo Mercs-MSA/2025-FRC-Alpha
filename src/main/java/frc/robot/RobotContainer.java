@@ -20,13 +20,13 @@ import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CommandCoral;
 import frc.robot.commands.CommandElevelatorPos;
+import frc.robot.commands.CommandFreePivot;
+import frc.robot.commands.CommandCancel;
 import frc.robot.commands.CommandCollectCoral;
 import frc.robot.commands.CommandScoreCoral;
-import frc.robot.commands.CommandPivotPos;
+import frc.robot.commands.CommandToState;
 import frc.robot.commands.CommandSetState;
-import frc.robot.commands.CommandPivotPos;
-import frc.robot.commands.CommandPivotPos;
-import frc.robot.commands.CommandPivotPosOpposite;
+// import frc.robot.commands.CommandPivotPosOpposite;
 import frc.robot.commands.CommandStopCoral;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -52,7 +52,7 @@ public class RobotContainer {
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
   private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
   
-  private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
     .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05); // 5% deadzone
   
   private final Coral m_coral = new Coral();
@@ -66,8 +66,6 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-
-  static boolean laserDetect = false;
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -89,12 +87,13 @@ public class RobotContainer {
 
   public void laserDetector() {
     LaserCan.Measurement measurement = Robot.laser.getMeasurement();
-    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      System.out.println("coral here");
-      laserDetect = true;
+    System.out.println(measurement);
+    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm <= 100) {
+      System.out.println(measurement.distance_mm);
+      MotorConstants.laserDetect = true;
     } else {
-      System.out.println("coral not here");
-      laserDetect = false;
+      //System.out.println("coral not here");
+      MotorConstants.laserDetect = false;
     }
   }
 
@@ -107,15 +106,42 @@ public class RobotContainer {
 
    // m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
    // m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
-    m_driverController.x().onTrue(new CommandPivotPosOpposite(m_Pivot, 0.25));
-    m_driverController.y().onTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
-    m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
-    m_driverController.b().onTrue(new CommandStopCoral(m_claw));
+    // m_driverController.x().onTrue(new CommandPivotPosOpposite(m_Pivot, 0.25));
+    // m_driverController.y().onTrue(new CommandPivotPosOpposite(m_Pivot, -0.25));
+    // m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
+    // m_driverController.b().onTrue(new CommandStopCoral(m_claw));
 
 
 
-    // This is the swerve control which I have taken out while we are currently
-    // testing sub systems. Deadzone is 5%
+
+    m_operatorController.pov(180).onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL1));
+    m_operatorController.pov(270).onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL2));
+    m_operatorController.pov(0).onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL3));
+    m_operatorController.pov(90).onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL4));
+
+    m_operatorController.y().onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL2ALGAE));
+    m_operatorController.b().onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL1));
+    m_operatorController.a().onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.COOP));
+    m_operatorController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.BARGE));
+
+
+
+    m_operatorController.leftBumper().whileTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL2ALGAE));
+    m_operatorController.rightBumper().whileTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL3ALGAE));
+
+    m_driverController.leftTrigger(0.8).onTrue(new CommandScoreCoral(m_claw, false));
+    m_driverController.rightTrigger(0.8).onTrue(new CommandStopCoral(m_claw));
+    m_driverController.leftBumper().whileTrue(new CommandScoreCoral(m_claw, false));
+    m_driverController.rightBumper().whileTrue(new CommandScoreCoral(m_claw, true));
+
+
+
+    
+    // m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
+    // m_driverController.b().onTrue(new CommandStopCoral(m_claw));
+
+
+    // Deadzone is 5%
 
     drivetrain.setDefaultCommand(
       // Drivetrain will execute this command periodically
@@ -127,12 +153,14 @@ public class RobotContainer {
   );
 
     
+
+  m_driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric())); //Seed
     // m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, 5.0));
     // m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
 
     
-    m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
-    m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));    
+    // m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
+    // m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));    
   }
 
 public void getAutonomousCommand() {

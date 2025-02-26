@@ -4,37 +4,30 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.Pivot;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.Constants.MotorConstants;
-import frc.robot.Constants.PivotConstants;
-import frc.robot.Constants.MotorConstants.AvailableState;
+import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class CommandPivotPos extends Command {
-  private Pivot m_Pivot;
-  private double m_pos;
-  private double m_add;
+public class CommandCancel extends Command {
+  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  private boolean m_cancelstate;
+
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CommandPivotPos(Pivot subsystem, Double test) {
-    addRequirements(subsystem);
-    m_add = test;
-    m_pos = m_Pivot.getPositionPivot() + m_add;
-    m_Pivot.moveMethod(m_pos);
-
+  public CommandCancel(boolean cancelstate) {
+    m_cancelstate = cancelstate;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //m_pos = PivotConstants.pivotState.pivotPosGet();
-    m_Pivot.moveMethod(m_pos);
+    MotorConstants.cancelstate = m_cancelstate;
   }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {}

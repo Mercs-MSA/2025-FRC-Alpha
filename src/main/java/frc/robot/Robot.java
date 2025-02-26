@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
-  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
+  //private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
   public static final LaserCan laser = new LaserCan(14);
 
   /**
@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
     
     m_robotContainer.laserDetector();
 
-    SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);
+    // SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);
 
     CommandScheduler.getInstance().run();
   }
