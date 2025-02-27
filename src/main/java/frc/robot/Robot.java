@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
-  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
+  //private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
   public static final LaserCan laser = new LaserCan(14);
 
   /**
@@ -55,10 +55,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
       boolean doRejectUpdate = false;
 
-      LimelightHelpers.SetRobotOrientation("limelight", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-      
-      SmartDashboard.putNumber("Elevator Position", m_robotContainer.m_Elevator.getPosition());
-     // SmartDashboard.putNumber("Pivot Position", m_robotContainer.m_Pivot.getPositionPivot());
+      LimelightHelpers.SetRobotOrientation("limelight-alpha", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
       /* LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
       if(Math.abs(m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
       {
@@ -83,7 +80,7 @@ public class Robot extends TimedRobot {
     
     m_robotContainer.laserDetector();
 
-    //SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);
+    // SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);
 
     CommandScheduler.getInstance().run();
   }
@@ -103,10 +100,10 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    // // schedule the autonomous command (example)
+    // if (m_autonomousCommand != null) {
+    //   m_autonomousCommand.schedule();
+    // }
   }
 
   /** This function is called periodically during autonomous. */
