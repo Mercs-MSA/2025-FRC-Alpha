@@ -22,6 +22,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CommandCoral;
 import frc.robot.commands.CommandElevelatorMoveToPos;
 import frc.robot.commands.CommandElevelatorPos;
+import frc.robot.commands.CommandIntakeFlywheels;
 // import frc.robot.commands.CommandFreePivot;
 import frc.robot.commands.CommandPivotPos;
 import frc.robot.commands.CommandScoreCoral;
@@ -124,14 +125,18 @@ public class RobotContainer {
     //Uses the buffer variable for the elevator state and sets it to that state
     m_driverController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
 
-    //m_operatorController.pov(0).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4, false));
-    m_operatorController.pov(90).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3, false));
-    m_operatorController.pov(180).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1, false));
+   // m_operatorController.pov(0).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4));
+    m_operatorController.pov(90).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3));
+    m_operatorController.pov(180).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1));
+
+    m_operatorController.a().whileTrue(new CommandIntakeFlywheels(m_claw, 6));
+    m_operatorController.y().whileTrue(new CommandIntakeFlywheels(m_claw, -6));
+
    // m_operatorController.pov(270).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2, false));
 
     m_operatorController.pov(270).onTrue(new SequentialCommandGroup(
 
-      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2, false),
+      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2),
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true)
 
       
@@ -141,12 +146,14 @@ public class RobotContainer {
     ));
     m_operatorController.pov(0).onTrue(new SequentialCommandGroup(
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true),
-      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3, true))
+
+
+      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3)
 
     
 
 
-  );
+  ));
    // m_operatorController.a().onTrue(new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true));
 
 

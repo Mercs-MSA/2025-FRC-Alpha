@@ -4,40 +4,36 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.PivotConstants;
-import frc.robot.subsystems.Elevator;
+
 /** An example command that uses an example subsystem. */
-public class CommandElevelatorMoveToPos extends Command {
-  private Elevator m_elevator;
-  private double m_goToPos;
-  private double m_currentPos;
+public class CommandIntakeFlywheels extends Command {
+  //@SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  private final Claw m_claw;
+  private final Integer m_volts;
+
   /**
-   
-  
-  * Creates a new ExampleCommand.
+   * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CommandElevelatorMoveToPos(Elevator subsystem, double goToPos) {
-    addRequirements(subsystem);
-    m_elevator = subsystem;
-    m_goToPos = goToPos;
+  public CommandIntakeFlywheels(Claw claw, Integer volts) {
+    m_claw = claw;
+    m_volts = volts;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_currentPos = PivotConstants.pivotState.elevatorPosGet();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //m_pos = m_elevator.getPosition() + m_add;
-    m_elevator.moveMethod(m_goToPos, true);
-    m_currentPos = PivotConstants.pivotState.elevatorPosGet();
-    System.out.println("This is running");
+    m_claw.setVoltage(m_volts);
   }
 
   // Called once the command ends or is interrupted.
@@ -47,6 +43,6 @@ public class CommandElevelatorMoveToPos extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(m_currentPos-m_goToPos) <= 0.2) ? true : false;
+    return true;
   }
 }
