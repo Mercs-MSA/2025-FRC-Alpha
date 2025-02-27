@@ -74,6 +74,20 @@ public final class Constants {
      }
   }
 
+  public static class ElevatorConstants {
+    public static final double L1 = 0.35;
+    public static final double L2 = 5.45;
+    public static final double L3 = 12.90;
+    public static final double L4 = 25.75;
+  };
+  public static class PivotConstants
+  {
+    public static final double L1= 0.0;
+    public static final double L2THRUL3=2.9;
+    public static final double L4=5.0;
+    public static frc.robot.Constants.MotorConstants.AvailableState pivotState = frc.robot.Constants.MotorConstants.AvailableState.LEVEL1;
+  }
+
 
 
   public static class OperatorConstants {
@@ -86,10 +100,6 @@ public final class Constants {
         public static final String limelightBackName = "limelight-back";
         public static final Vector<N3> visionStdDevs = VecBuilder.fill(.7,.7,9999999);
     }
-  public class PivotConstants
-  {
-      public static frc.robot.Constants.MotorConstants.AvailableState pivotState = frc.robot.Constants.MotorConstants.AvailableState.LEVEL1;
-  }
   
   // public static class ClawConstants {
   //   public static int clawMotorID = 21;

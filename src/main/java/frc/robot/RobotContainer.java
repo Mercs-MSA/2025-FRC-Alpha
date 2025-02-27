@@ -15,21 +15,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ElevatorConstants;
 //import frc.robot.Constants.MotorConstants.AvailableState;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.CommandCoral;
+import frc.robot.commands.CommandElevelatorMoveToPos;
 import frc.robot.commands.CommandElevelatorPos;
-import frc.robot.commands.CommandFreePivot;
-import frc.robot.commands.CommandCollectCoral;
+// import frc.robot.commands.CommandFreePivot;
+import frc.robot.commands.CommandPivotPos;
 import frc.robot.commands.CommandScoreCoral;
 import frc.robot.commands.CommandToState;
-import frc.robot.commands.CommandSetState;
 import frc.robot.commands.CommandSetToState;
 // import frc.robot.commands.CommandPivotPosOpposite;
 import frc.robot.commands.CommandStopCoral;
-import frc.robot.commands.scoreL1;
-import frc.robot.commands.scoreL2;
+
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Coral;
@@ -37,7 +37,6 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Claw;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandGroups;
 
 
 /**
@@ -62,7 +61,6 @@ public class RobotContainer {
   public final Elevator m_Elevator = new Elevator();
   private final Pivot m_Pivot = new Pivot();
   private final Claw m_claw =new Claw();
-  private final CommandGroups m_commandgroups=new CommandGroups();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
@@ -105,13 +103,15 @@ public class RobotContainer {
 
 
     //4 commands send elevator state to a buffer variable to be later called by driver
-    m_operatorController.pov(180).onTrue(new CommandSetToState(AvailableState.LEVEL1));
-    m_operatorController.pov(270).onTrue(new CommandSetToState(AvailableState.LEVEL2));
-    m_operatorController.pov(0).onTrue(new CommandSetToState(AvailableState.LEVEL3));
-    m_operatorController.pov(90).onTrue(new CommandSetToState(AvailableState.LEVEL4));
+
+
+    // m_operatorController.pov(180).onTrue(new CommandSetToState(Constants.MotorConstants.AvailableState.LEVEL1));
+    // m_operatorController.pov(270).onTrue(new CommandSetToState(Constants.MotorConstants.AvailableState.LEVEL2));
+    // m_operatorController.pov(0).onTrue(new CommandSetToState(Constants.MotorConstants.AvailableState.LEVEL3));
+    // m_operatorController.pov(90).onTrue(new CommandSetToState(Constants.MotorConstants.AvailableState.LEVEL4));
 
     //Resets elevator and pivot to bottom by control of operator
-    m_operatorController.b().onTrue(new CommandToState(m_Elevator, m_Pivot, AvailableState.LEVEL1));
+    m_operatorController.b().onTrue(new CommandToState(m_Elevator, m_Pivot, Constants.MotorConstants.AvailableState.LEVEL1));
 
     //Left trigger starts into. Right trigger stops, should normally need to be used to stop it after scoring
     m_driverController.leftTrigger(0.8).onTrue(new CommandScoreCoral(m_claw, false));
@@ -124,9 +124,32 @@ public class RobotContainer {
     //Uses the buffer variable for the elevator state and sets it to that state
     m_driverController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
 
+    m_operatorController.pov(0).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4, false));
+    m_operatorController.pov(90).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3, false));
+    m_operatorController.pov(180).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1, false));
+   // m_operatorController.pov(270).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2, false));
 
+    m_operatorController.pov(270).onTrue(new SequentialCommandGroup(
+
+      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2, false),
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true)
+
+      
+
+
+      
+    ));
+    m_operatorController.pov(0).onTrue(new SequentialCommandGroup(
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true),
+
+
+      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3, false)
 
     
+
+
+  ));
+   // m_operatorController.a().onTrue(new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true));
 
 
 
