@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import com.ctre.phoenix6.Utils;
+
 import au.grapplerobotics.CanBridge;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
@@ -71,7 +74,7 @@ public class Robot extends TimedRobot {
         m_robotContainer.drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         m_robotContainer.drivetrain.addVisionMeasurement(
             mt2.pose,
-            mt2.timestampSeconds); 
+            Utils.fpgaToCurrentTime(mt2.timestampSeconds)); 
             System.out.println("Limelight Updated");
 
 
