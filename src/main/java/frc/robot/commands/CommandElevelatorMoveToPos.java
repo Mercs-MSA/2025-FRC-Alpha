@@ -39,6 +39,7 @@ public class CommandElevelatorMoveToPos extends Command {
     //m_pos = m_elevator.getPosition() + m_add;
     m_elevator.moveMethod(m_goToPos, true);
     m_currentPos = PivotConstants.pivotState.elevatorPosGet();
+    System.out.println("This is running");
   }
 
   // Called once the command ends or is interrupted.

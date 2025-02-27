@@ -108,6 +108,8 @@ public class CommandPivotPos extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(m_currentPos-m_goToPos) <= 0.2) ? true : false;
+    System.out.println("not finished");
+    // return (Math.abs(m_currentPos-m_goToPos) <= 0.2) ? true : false;
+  return true;
   }
 }

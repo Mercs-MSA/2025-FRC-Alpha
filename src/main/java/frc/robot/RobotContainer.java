@@ -124,7 +124,7 @@ public class RobotContainer {
     //Uses the buffer variable for the elevator state and sets it to that state
     m_driverController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
 
-    m_operatorController.pov(0).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4, false));
+    //m_operatorController.pov(0).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4, false));
     m_operatorController.pov(90).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3, false));
     m_operatorController.pov(180).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1, false));
    // m_operatorController.pov(270).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2, false));
@@ -141,14 +141,12 @@ public class RobotContainer {
     ));
     m_operatorController.pov(0).onTrue(new SequentialCommandGroup(
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true),
-
-
-      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3, false)
+      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3, true))
 
     
 
 
-  ));
+  );
    // m_operatorController.a().onTrue(new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true));
 
 
