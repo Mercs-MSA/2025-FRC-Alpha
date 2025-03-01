@@ -19,6 +19,7 @@ import frc.robot.Constants.ElevatorConstants;
 //import frc.robot.Constants.MotorConstants.AvailableState;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.commands.CommandCoral;
 import frc.robot.commands.CommandElevelatorMoveToPos;
 import frc.robot.commands.CommandElevelatorPos;
@@ -60,7 +61,7 @@ public class RobotContainer {
   
   public final Coral m_coral = new Coral();
   public final Elevator m_Elevator = new Elevator();
-  private final Pivot m_Pivot = new Pivot();
+  public final Pivot m_Pivot = new Pivot();
   private final Claw m_claw =new Claw();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -123,37 +124,38 @@ public class RobotContainer {
     // m_driverController.rightBumper().whileTrue(new CommandScoreCoral(m_claw, true));
 
     //Uses the buffer variable for the elevator state and sets it to that state
-    m_driverController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
-
-   // m_operatorController.pov(0).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4));
-    m_operatorController.pov(90).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3));
-    m_operatorController.pov(180).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1));
+    //m_driverController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
 
     m_operatorController.a().whileTrue(new CommandIntakeFlywheels(m_claw, 6));
     m_operatorController.y().whileTrue(new CommandIntakeFlywheels(m_claw, -6));
-
-   // m_operatorController.pov(270).onTrue(new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2, false));
+   
+    m_operatorController.pov(0).onTrue(new SequentialCommandGroup(
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4),
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
+    ));
 
     m_operatorController.pov(270).onTrue(new SequentialCommandGroup(
-
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
       new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2),
-      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true)
-
-      
-
-
-      
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
     ));
-    m_operatorController.pov(0).onTrue(new SequentialCommandGroup(
-      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true),
 
+    m_operatorController.pov(90).onTrue(new SequentialCommandGroup(
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3),
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
+    ));
 
-      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3)
-
-    
-
-
+    m_operatorController.pov(180).onTrue(new SequentialCommandGroup(
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
   ));
+    
+  
+  //m_operatorController.pov(90).onTrue(new CommandPivotPos(m_Pivot, PivotConstants.L1));
+  
    // m_operatorController.a().onTrue(new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true));
 
 

@@ -78,6 +78,14 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     
+    SmartDashboard.putNumber("elevator command", m_robotContainer.m_Elevator.m_elevator_command);
+    SmartDashboard.putNumber("elevator position", m_robotContainer.m_Elevator.getPosition());
+    SmartDashboard.putNumber("elevator voltage", m_robotContainer.m_Elevator.getVoltage());
+
+    SmartDashboard.putNumber("pivot desired position", m_robotContainer.m_Pivot.desiredPosition);
+    SmartDashboard.putNumber("pivot position", m_robotContainer.m_Pivot.getPosition());
+    SmartDashboard.putNumber("pivot voltage", m_robotContainer.m_Pivot.getVoltage());
+
     m_robotContainer.laserDetector();
 
     // SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);

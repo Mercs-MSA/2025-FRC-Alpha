@@ -19,7 +19,7 @@ import frc.robot.Constants;
 
 public class Pivot extends SubsystemBase {
   private final TalonFX pivotMotor = new TalonFX(Constants.MotorConstants.IntakePivot, "rio");
-  
+  public double desiredPosition;
   private final PositionVoltage pivotVoltage = new PositionVoltage(0);
   private final MotionMagicExpoVoltage pivotMotionMagicVoltage = new MotionMagicExpoVoltage(0);
 
@@ -88,6 +88,7 @@ public class Pivot extends SubsystemBase {
 
 
   public void moveMethod(Double DesiredMotorPos, boolean Able) {
+    desiredPosition = DesiredMotorPos;
     if (Able) {
     pivotMotor.setControl(pivotMotionMagicVoltage.withPosition(DesiredMotorPos));
     }
@@ -104,6 +105,10 @@ public class Pivot extends SubsystemBase {
      */
   public double getPosition() {
     return (pivotMotor.getPosition().getValueAsDouble());
+  }
+
+  public double getVoltage() {
+    return pivotMotor.getMotorVoltage().getValueAsDouble();
   }
 
   // private boolean isMovingCheck() {

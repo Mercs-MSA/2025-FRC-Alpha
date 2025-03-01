@@ -72,7 +72,6 @@ public class CommandPivotPos extends Command {
   private Pivot m_pivot;
   private double m_goToPos;
   private double m_currentPos;
-  private boolean m_softLand;
   /**
    
   
@@ -80,17 +79,16 @@ public class CommandPivotPos extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CommandPivotPos(Pivot subsystem, double goToPos, boolean softLand) {
+  public CommandPivotPos(Pivot subsystem, double goToPos) {
     addRequirements(subsystem);
     m_pivot = subsystem;
     m_goToPos = goToPos;
-    m_softLand = softLand;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_currentPos = PivotConstants.pivotState.elevatorPosGet();
+    m_currentPos = m_pivot.getPosition();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -98,7 +96,7 @@ public class CommandPivotPos extends Command {
   public void execute() {
     //m_pos = m_elevator.getPosition() + m_add;
     m_pivot.moveMethod(m_goToPos, true);
-    m_currentPos = PivotConstants.pivotState.elevatorPosGet();
+    m_currentPos = m_pivot.getPosition();
   }
 
   // Called once the command ends or is interrupted.
@@ -108,8 +106,7 @@ public class CommandPivotPos extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    System.out.println("not finished");
-    // return (Math.abs(m_currentPos-m_goToPos) <= 0.2) ? true : false;
-  return true;
+    //System.out.println("not finished");
+    return (Math.abs(m_currentPos-m_goToPos) <= 0.2) ? true : false;
   }
 }

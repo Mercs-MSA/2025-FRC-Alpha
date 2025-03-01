@@ -78,13 +78,13 @@ public final class Constants {
     public static final double L1 = 0.35;
     public static final double L2 = 5.45;
     public static final double L3 = 12.90;
-    public static final double L4 = 25.75;
+    public static final double L4 = 27.25;
   };
   public static class PivotConstants
   {
     public static final double L1= 0.0;
-    public static final double L2THRUL3=2.0;
-    public static final double L4=5.0;
+    public static final double TRANSFER_POSITION = 4.5;
+    public static final double L4=4;
     public static frc.robot.Constants.MotorConstants.AvailableState pivotState = frc.robot.Constants.MotorConstants.AvailableState.LEVEL1;
   }
 

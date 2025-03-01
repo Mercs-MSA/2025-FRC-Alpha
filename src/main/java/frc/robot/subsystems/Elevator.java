@@ -26,6 +26,7 @@ public class Elevator extends SubsystemBase {
   private final TalonFX m_elevfollower = new TalonFX(Constants.MotorConstants.ElevatorFollower, "rio");
   private final PositionVoltage elevatorVoltage = new PositionVoltage(0);
   private final MotionMagicExpoVoltage elevatorMotionMagicVoltage = new MotionMagicExpoVoltage(0);
+  public double m_elevator_command = 0;
 
   public Elevator() {
     m_elevfollower.setControl(new Follower(MotorConstants.ElevatorMain, false));
@@ -93,6 +94,7 @@ public class Elevator extends SubsystemBase {
 
 
    public void moveMethod(Double DesiredMotorPos, boolean Able) {
+    m_elevator_command = DesiredMotorPos;
     if (Able == true) {
       m_elevmain.setControl(elevatorMotionMagicVoltage.withPosition(DesiredMotorPos));
       //pivotMotor.setControl(pivotVoltage.withPosition(Constants.MotorConstants.pivotMotorPositions.get(DesiredMotorPos (AvailableState type) )));
@@ -111,5 +113,13 @@ public class Elevator extends SubsystemBase {
    */    
     public double getPosition() {
       return (m_elevmain.getPosition().getValueAsDouble());
+    }
+
+    public double getVoltage() {
+      return m_elevmain.getMotorVoltage().getValueAsDouble();
+    }
+
+    public void setVoltageToZero() {
+      m_elevmain.setVoltage(0);
     }
   }
