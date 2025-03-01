@@ -4,6 +4,10 @@ import java.io.Flushable;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -20,10 +24,10 @@ public class Claw extends SubsystemBase {
     private CANBus fake = new CANBus("rio");
     //private CANrange ranger = new CANrange(Constants.ClawConstants.rangerID, fake.getName());
     public TalonFX flywheel = new TalonFX(Constants.MotorConstants.Flywheelintake, fake.getName());
+     private final MotionMagicExpoVoltage clawVoltage = new MotionMagicExpoVoltage(0);
 
     private static double perfectCoralPosition;
-
-    CANrangeConfiguration configs = new CANrangeConfiguration();
+    
 
     //Enum here to keep track of state
     public static enum CLAW_STATES {
@@ -37,6 +41,20 @@ public class Claw extends SubsystemBase {
 
     public Claw() {
         //ranger.getConfigurator().apply(configs);
+        TalonFXConfiguration configs = new TalonFXConfiguration();
+        MotionMagicConfigs motionMagicCon = configs.MotionMagic;
+        configs.Slot0.kP = 5; // An error of 1 rotation results in 2.4 V output
+        configs.Slot0.kI = 0.5; // No output for integrated error
+        configs.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
+        configs.Slot0.kG = 0;
+        // Peak output of 8 V
+        configs.Voltage.withPeakForwardVoltage(8)
+        .withPeakReverseVoltage(-8);
+
+        motionMagicCon.MotionMagicCruiseVelocity = 30;
+        motionMagicCon.MotionMagicAcceleration = 10;
+        motionMagicCon.MotionMagicJerk = 0;
+
         flywheel.setNeutralMode(NeutralModeValue.Brake);
     }
 
@@ -50,10 +68,13 @@ public class Claw extends SubsystemBase {
         return flywheel.getMotorVoltage().getValueAsDouble();
     }
 
-    public void setCoralAtPercectPosition() {
+    public void setPerfectPosition() {
         perfectCoralPosition = flywheel.getPosition().getValueAsDouble() - 2;
+    }
+
+    public void runMotorToPerfectPosition() {
         //get gear ratio: 2:1, get distance: 6.25inches , get circumfrence of wheel: 2 inches,
-        flywheel.setPosition(perfectCoralPosition);
+        flywheel.setControl(clawVoltage.withPosition(perfectCoralPosition));
     }
 
     public boolean isCoralAtPerfectPosition() {

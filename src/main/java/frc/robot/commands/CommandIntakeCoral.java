@@ -26,12 +26,14 @@ public class CommandIntakeCoral extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_claw.setPerfectPosition();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_claw.setCoralAtPercectPosition();
+    m_claw.runMotorToPerfectPosition();
   }
 
   // Called once the command ends or is interrupted.
