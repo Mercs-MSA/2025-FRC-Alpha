@@ -21,6 +21,8 @@ public class Claw extends SubsystemBase {
     //private CANrange ranger = new CANrange(Constants.ClawConstants.rangerID, fake.getName());
     public TalonFX flywheel = new TalonFX(Constants.MotorConstants.Flywheelintake, fake.getName());
 
+    private static double perfectCoralPosition;
+
     CANrangeConfiguration configs = new CANrangeConfiguration();
 
     //Enum here to keep track of state
@@ -49,12 +51,13 @@ public class Claw extends SubsystemBase {
     }
 
     public void setCoralAtPercectPosition() {
+        perfectCoralPosition = flywheel.getPosition().getValueAsDouble() - 2;
         //get gear ratio: 2:1, get distance: 6.25inches , get circumfrence of wheel: 2 inches,
-        flywheel.setPosition(flywheel.getPosition().getValueAsDouble() + 2);
+        flywheel.setPosition(perfectCoralPosition);
     }
 
     public boolean isCoralAtPerfectPosition() {
-        return (Math.abs((flywheel.getPosition().getValueAsDouble() + 2) - flywheel.getPosition().getValueAsDouble()) <= 0.1);
+        return (Math.abs(perfectCoralPosition - flywheel.getPosition().getValueAsDouble()) <= 0.1);
     }
     
 
