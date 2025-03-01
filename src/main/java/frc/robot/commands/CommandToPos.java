@@ -24,12 +24,12 @@ public class CommandToPos extends Command {
   // tune PID later
   private final PIDController thetaController =
     // new ProfiledPIDController(6, 1.0, 0, new TrapezoidProfile.Constraints(Math.PI, Math.PI));
-    new PIDController(2, 0, 0);
+    new PIDController(.5, 0, 0);
   private final PIDController xVelController =
     // new ProfiledPIDController(2.5, 0, 0, new TrapezoidProfile.Constraints(Constants.DriveToPoseConstants.linearMetersMaxVel, Constants.DriveToPoseConstants.linearMetersMaxAccel));
-    new PIDController(2.5, 0, 0);
+    new PIDController(.5, 0, 0);
   private final PIDController yVelController =
-    new PIDController(2.5, 0, 0);
+    new PIDController(.5, 0, 0);
     // new ProfiledPIDController(2.5, 0, 0, new TrapezoidProfile.Constraints(Constants.DriveToPoseConstants.linearMetersMaxVel, Constants.DriveToPoseConstants.linearMetersMaxAccel));
 
   
@@ -37,9 +37,9 @@ public class CommandToPos extends Command {
   public CommandToPos(CommandSwerveDrivetrain swerve, Pose2d targetPose, boolean invertRed) {
     this.drivetrain = swerve;
 
-    // thetaController.setTolerance(Units.degreesToRadians(Constants.DriveToPoseConstants.angularDegreesTolerance));
-    // xVelController.setTolerance(Constants.DriveToPoseConstants.linearMetersTolerance); Fizx these numbers
-    // yVelController.setTolerance(Constants.DriveToPoseConstants.linearMetersTolerance);
+    thetaController.setTolerance(Units.degreesToRadians(0.3));
+    xVelController.setTolerance(0.01); 
+    yVelController.setTolerance(0.01);
     
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -137,7 +137,6 @@ public class CommandToPos extends Command {
 
   @Override
   public boolean isFinished(){
-    // return atGoal();
-    return false;
+    return atGoal();
   }
 }

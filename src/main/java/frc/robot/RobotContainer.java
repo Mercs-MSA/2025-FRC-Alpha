@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import au.grapplerobotics.LaserCan;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -32,7 +33,7 @@ import frc.robot.commands.CommandToState;
 import frc.robot.commands.CommandSetToState;
 // import frc.robot.commands.CommandPivotPosOpposite;
 import frc.robot.commands.CommandStopCoral;
-
+import frc.robot.commands.CommandToPos;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Coral;
@@ -193,6 +194,13 @@ public class RobotContainer {
               .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
       )
   );
+
+  
+   m_driverController.x().onTrue(new CommandToPos(drivetrain,
+   new Pose2d(drivetrain.getState().Pose.getX() + 1,
+   drivetrain.getState().Pose.getY(),
+   drivetrain.getState().Pose.getRotation()),
+   false));
 
     
     //Seeds robot for field centric. To seed, face the robot facing the direction opposite of the driver stations then hit Y
