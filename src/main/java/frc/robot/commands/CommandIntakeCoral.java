@@ -4,28 +4,24 @@
 
 package frc.robot.commands;
 
-import frc.robot.RobotContainer;
-import frc.robot.RobotContainer.IntakeAction;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class CommandIntakeFlywheels extends Command {
-  //@SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+public class CommandIntakeCoral extends Command {
+  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Claw m_claw;
-  private final IntakeAction m_IntakeAction;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CommandIntakeFlywheels(Claw claw, IntakeAction intakeAction) {
+  public CommandIntakeCoral(Claw claw) {
     m_claw = claw;
-    m_IntakeAction = IntakeAction.INTAKE;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(claw);
+    addRequirements(m_claw);
   }
 
   // Called when the command is initially scheduled.
@@ -35,25 +31,16 @@ public class CommandIntakeFlywheels extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_IntakeAction == IntakeAction.INTAKE) {
-      m_claw.setVoltage(3);
-    } else if (m_IntakeAction == IntakeAction.OUTTAKE) {
-      if (RobotContainer.isCoralInIntake())
-        m_claw.setVoltage(-6);
-    }
+    m_claw.setCoralAtPercectPosition();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    if (interrupted) {
-      m_claw.setVoltage(0);
-    }
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.isCoralInIntake();
+    return m_claw.isCoralAtPerfectPosition();
   }
 }

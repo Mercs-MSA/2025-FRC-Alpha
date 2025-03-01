@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.io.Flushable;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.hardware.CANrange;
@@ -46,8 +48,14 @@ public class Claw extends SubsystemBase {
         return flywheel.getMotorVoltage().getValueAsDouble();
     }
 
+    public void setCoralAtPercectPosition() {
+        //get gear ratio: 2:1, get distance: 6.25inches , get circumfrence of wheel: 2 inches,
+        flywheel.setPosition(flywheel.getPosition().getValueAsDouble() + 2);
+    }
 
-
+    public boolean isCoralAtPerfectPosition() {
+        return (Math.abs((flywheel.getPosition().getValueAsDouble() + 2) - flywheel.getPosition().getValueAsDouble()) <= 0.1);
+    }
     
 
     @Override
