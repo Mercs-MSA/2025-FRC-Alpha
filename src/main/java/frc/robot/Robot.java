@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import com.ctre.phoenix6.Utils;
+
 import au.grapplerobotics.CanBridge;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
@@ -25,6 +28,9 @@ public class Robot extends TimedRobot {
   private final RobotContainer m_robotContainer;
   //private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
   public static final LaserCan laser = new LaserCan(14);
+
+  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -53,25 +59,34 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-      boolean doRejectUpdate = false;
+    boolean doRejectUpdate = false;
+    double[] arr = {m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(),  m_robotContainer.drivetrain.getState().Pose.getX(), m_robotContainer.drivetrain.getState().Pose.getY()};
+    LimelightHelpers.SetRobotOrientation("limelight-alpha", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    LimelightHelpers.PoseEstimate mt = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-alpha");
+    if(Math.abs(m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+    {
+      doRejectUpdate = true;
+    }
+    if(mt.tagCount == 0)
+    {
+      doRejectUpdate = true;
+      System.out.println("No tags");
+    }
+    if(!doRejectUpdate)
+    {
+      m_robotContainer.drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+      m_robotContainer.drivetrain.addVisionMeasurement(
+          mt.pose,
+          Utils.fpgaToCurrentTime(mt.timestampSeconds)); 
+      System.out.println("Limelight Updated");
+      System.out.println(arr);
+      System.out.println("to" + mt.pose.getX() +" " + mt.pose.getY() + "" + mt.pose.getRotation().getDegrees());
 
-      LimelightHelpers.SetRobotOrientation("limelight-alpha", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-      /* LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-      if(Math.abs(m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
-      {
-        doRejectUpdate = true;
-      }
-      if(mt2.tagCount == 0)
-      {
-        doRejectUpdate = true;
-      }
-      if(!doRejectUpdate)
-      {
-        m_robotContainer.drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-        m_robotContainer.drivetrain.addVisionMeasurement(
-            mt2.pose,
-            mt2.timestampSeconds); */
-      //}
+
+    }
+
+    
+    SmartDashboard.putNumberArray("Odom Pose", arr);
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
