@@ -101,7 +101,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("pivot position", m_robotContainer.m_Pivot.getPosition());
     SmartDashboard.putNumber("pivot voltage", m_robotContainer.m_Pivot.getVoltage());
 
-    m_robotContainer.laserDetector();
+    SmartDashboard.putNumber("Distance to object (mm)", laser.getMeasurement().distance_mm);
+    SmartDashboard.putNumber("status", laser.getMeasurement().status);
+
+
+    
 
     // SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);
 

@@ -36,10 +36,10 @@ public class CommandIntakeFlywheels extends Command {
   @Override
   public void execute() {
     if (m_IntakeAction == IntakeAction.INTAKE) {
-      m_claw.setVoltage(3);
+      m_claw.setVoltage(-3);
     } else if (m_IntakeAction == IntakeAction.OUTTAKE) {
       if (RobotContainer.isCoralInIntake())
-        m_claw.setVoltage(-6);
+        m_claw.setVoltage(6);
     }
   }
 
