@@ -127,24 +127,27 @@ public class RobotContainer {
     //m_driverController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
 
     m_operatorController.a().whileTrue(new CommandIntakeFlywheels(m_claw, 6));
-    m_operatorController.y().whileTrue(new CommandIntakeFlywheels(m_claw, -6));
+    m_operatorController.x().whileTrue(new CommandIntakeFlywheels(m_claw, -6));
    
     m_operatorController.pov(0).onTrue(new SequentialCommandGroup(
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
       new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4),
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
+
     ));
 
     m_operatorController.pov(270).onTrue(new SequentialCommandGroup(
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
       new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2),
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
+
     ));
 
     m_operatorController.pov(90).onTrue(new SequentialCommandGroup(
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
       new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3),
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
+
     ));
 
     m_operatorController.pov(180).onTrue(new SequentialCommandGroup(
