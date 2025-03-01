@@ -23,6 +23,7 @@ import frc.robot.Constants.PivotConstants;
 import frc.robot.commands.CommandCoral;
 import frc.robot.commands.CommandElevelatorMoveToPos;
 import frc.robot.commands.CommandElevelatorPos;
+import frc.robot.commands.CommandIntakeCoral;
 import frc.robot.commands.CommandIntakeFlywheels;
 // import frc.robot.commands.CommandFreePivot;
 import frc.robot.commands.CommandPivotPos;
@@ -79,6 +80,11 @@ public class RobotContainer {
     
   }
 
+  public enum IntakeAction {
+    INTAKE,
+    OUTTAKE
+  }
+
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -99,6 +105,16 @@ public class RobotContainer {
     }
     //System.out.println(measurement.distance_mm);
   }
+
+  public static boolean isCoralInIntake() {
+    LaserCan.Measurement measurement = Robot.laser.getMeasurement();
+    //only returns true for distances equal to or less than 100mm/10cm so it shouldnt accidently be triggered
+    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm <= 100) {
+      return true;
+    } else {
+      return false;
+    }
+  }
  
   
   private void configureBindings() {
@@ -114,6 +130,11 @@ public class RobotContainer {
 
     //Resets elevator and pivot to bottom by control of operator
     m_operatorController.b().onTrue(new CommandToState(m_Elevator, m_Pivot, Constants.MotorConstants.AvailableState.LEVEL1));
+    
+    m_operatorController.a().whileTrue(new SequentialCommandGroup(
+      new CommandIntakeFlywheels(m_claw, IntakeAction.INTAKE),
+      new CommandIntakeCoral(m_claw)
+    ));
 
     //Left trigger starts into. Right trigger stops, should normally need to be used to stop it after scoring
     m_driverController.leftTrigger(0.8).onTrue(new CommandScoreCoral(m_claw, false));
@@ -126,8 +147,8 @@ public class RobotContainer {
     //Uses the buffer variable for the elevator state and sets it to that state
     //m_driverController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
 
-    m_operatorController.a().whileTrue(new CommandIntakeFlywheels(m_claw, 6));
-    m_operatorController.y().whileTrue(new CommandIntakeFlywheels(m_claw, -6));
+    //m_operatorController.a().whileTrue(new CommandIntakeFlywheels(m_claw, IntakeAction.INTAKE)); //intakes
+    m_operatorController.y().whileTrue(new CommandIntakeFlywheels(m_claw, IntakeAction.OUTTAKE)); //expells
    
     m_operatorController.pov(0).onTrue(new SequentialCommandGroup(
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
