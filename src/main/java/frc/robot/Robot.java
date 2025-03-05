@@ -62,12 +62,12 @@ public class Robot extends TimedRobot {
     boolean doRejectUpdate = false;
     double[] arr = {m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(),  m_robotContainer.drivetrain.getState().Pose.getX(), m_robotContainer.drivetrain.getState().Pose.getY()};
     LimelightHelpers.SetRobotOrientation("limelight-alpha", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-    LimelightHelpers.PoseEstimate mt = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-alpha");
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-alpha");
     if(Math.abs(m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
     {
       doRejectUpdate = true;
     }
-    if(mt.tagCount == 0)
+    if(mt2.tagCount == 0)
     {
       doRejectUpdate = true;
       System.out.println("No tags");
@@ -76,11 +76,11 @@ public class Robot extends TimedRobot {
     {
       m_robotContainer.drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
       m_robotContainer.drivetrain.addVisionMeasurement(
-          mt.pose,
-          Utils.fpgaToCurrentTime(mt.timestampSeconds)); 
+          mt2.pose,
+          Utils.fpgaToCurrentTime(mt2.timestampSeconds)); 
       System.out.println("Limelight Updated");
       System.out.println(arr);
-      System.out.println("to" + mt.pose.getX() +" " + mt.pose.getY() + "" + mt.pose.getRotation().getDegrees());
+      System.out.println("to" + mt2.pose.getX() +" " + mt2.pose.getY() + "" + mt2.pose.getRotation().getDegrees());
 
 
     }
