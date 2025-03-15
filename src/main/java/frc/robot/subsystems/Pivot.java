@@ -41,7 +41,7 @@ public class Pivot extends SubsystemBase {
     motionMagicCon.MotionMagicAcceleration = 5;
     motionMagicCon.MotionMagicJerk = 0;
 
-    // configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    configs.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     /* Retry config apply up to 5 times, report if failure */
     StatusCode status = StatusCode.StatusCodeNotInitialized;

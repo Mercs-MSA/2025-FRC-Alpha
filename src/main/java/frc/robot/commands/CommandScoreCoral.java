@@ -12,23 +12,15 @@ public class CommandScoreCoral extends Command {
     public boolean m_startstate=false;
     public boolean m_backwards;
 
-    public CommandScoreCoral(Claw subsystem, boolean backwards) {
+    public CommandScoreCoral(Claw subsystem) {
         addRequirements(subsystem);
         m_claw = subsystem;
-        m_backwards = backwards;
     }
     
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        if(!(m_claw.isCoralInIntake())) {
-            m_startstate = true;
-        } 
-        if (m_backwards == false) {
-            m_claw.setVoltage(-3);
-        } else if (m_backwards == true) {
-            m_claw.setVoltage(3);
-        }
+        m_claw.setVoltage(-3);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -45,7 +37,7 @@ public class CommandScoreCoral extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return m_claw.isCoralInIntake();
+        return false;
 
     }
 }

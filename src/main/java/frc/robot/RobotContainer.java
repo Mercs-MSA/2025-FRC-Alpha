@@ -68,8 +68,8 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  //private final CommandXboxController m_operatorController =
+      //new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
@@ -120,15 +120,14 @@ public class RobotContainer {
     ));
 
     //Left trigger starts into. Right trigger stops, should normally need to be used to stop it after scoring
-    m_driverController.leftTrigger(0.8).onTrue(new CommandScoreCoral(m_claw, false));
-    m_driverController.rightTrigger(0.8).onTrue(new CommandStopCoral(m_claw));
+    m_operatorController.leftTrigger(0.8).whileTrue(new CommandScoreCoral(m_claw));
 
     //For future use with Algae
-    // m_driverController.leftBumper().whileTrue(new CommandScoreCoral(m_claw, false));
-    // m_driverController.rightBumper().whileTrue(new CommandScoreCoral(m_claw, true));
+    // m_operatorController.leftBumper().whileTrue(new CommandScoreCoral(m_claw, false));
+    // m_operatorController.rightBumper().whileTrue(new CommandScoreCoral(m_claw, true));
 
     //Uses the buffer variable for the elevator state and sets it to that state
-    //m_driverController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
+    //m_operatorController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
 
     //m_operatorController.a().whileTrue(new CommandIntakeFlywheels(m_claw, IntakeAction.INTAKE)); //intakes
     m_operatorController.y().onTrue(new CommandIntakeFlywheels(m_claw)); //expells
@@ -171,14 +170,14 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(
       // Drivetrain will execute this command periodically
       drivetrain.applyRequest(() ->
-          drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-              .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-              .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+          drive.withVelocityX(-m_operatorController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+              .withVelocityY(-m_operatorController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+              .withRotationalRate(-m_operatorController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
       )
   );
 
   
-   m_driverController.x().onTrue(new CommandToPos(drivetrain,
+   m_operatorController.x().onTrue(new CommandToPos(drivetrain,
    new Pose2d(drivetrain.getState().Pose.getX() + 1,
    drivetrain.getState().Pose.getY(),
    drivetrain.getState().Pose.getRotation()),
@@ -186,7 +185,7 @@ public class RobotContainer {
 
     
     //Seeds robot for field centric. To seed, face the robot facing the direction opposite of the driver stations then hit Y
-    m_driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric())); //Seed  
+    m_operatorController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric())); //Seed  
   }
 
 public void getAutonomousCommand() {

@@ -85,7 +85,7 @@ public final class Constants {
     public static final double L1= 0.0;
     public static final double L2THRUL3=1.0;
     public static final double L4=5.0;
-    public static final double TRANSFER_POSITION = 4.0;
+    public static final double TRANSFER_POSITION = 4.5;
     public static frc.robot.Constants.MotorConstants.AvailableState pivotState = frc.robot.Constants.MotorConstants.AvailableState.LEVEL1;
   }
 
