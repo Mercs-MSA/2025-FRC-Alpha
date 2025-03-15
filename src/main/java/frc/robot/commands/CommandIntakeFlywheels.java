@@ -14,39 +14,42 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class CommandIntakeFlywheels extends Command {
   //@SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Claw m_claw;
-  private final IntakeAction m_IntakeAction;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CommandIntakeFlywheels(Claw claw, IntakeAction intakeAction) {
+  public CommandIntakeFlywheels(Claw claw) {
     m_claw = claw;
-    m_IntakeAction = IntakeAction.INTAKE;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(claw);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() 
+  {
+    m_claw.setVoltage(-2.5);
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_IntakeAction == IntakeAction.INTAKE) {
-      m_claw.setVoltage(-3);
-    } else if (m_IntakeAction == IntakeAction.OUTTAKE) {
-      if (RobotContainer.isCoralInIntake())
-        m_claw.setVoltage(6);
-    }
+    
+    //else if (m_IntakeAction == IntakeAction.OUTTAKE) {
+    //   if (RobotContainer.isCoralInIntake())
+    //     m_claw.setVoltage(0);
+    // }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_claw.setVoltage(0);
     if (interrupted) {
+      
       m_claw.setVoltage(0);
     }
   }
@@ -54,6 +57,6 @@ public class CommandIntakeFlywheels extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.isCoralInIntake();
+    return m_claw.isCoralInIntake();
   }
 }

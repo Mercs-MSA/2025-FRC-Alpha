@@ -27,7 +27,6 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
   //private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
-  public static final LaserCan laser = new LaserCan(14);
 
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
 
@@ -40,14 +39,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    try {
-      laser.setRangingMode(LaserCan.RangingMode.SHORT);
-      laser.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
-      laser.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
-    } catch (ConfigurationFailedException e) {
-      System.out.println("Configuration failed! " + e);
-    }
-    CanBridge.runTCP();
+
   }
 
   /**
@@ -101,8 +93,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("pivot position", m_robotContainer.m_Pivot.getPosition());
     SmartDashboard.putNumber("pivot voltage", m_robotContainer.m_Pivot.getVoltage());
 
-    SmartDashboard.putNumber("Distance to object (mm)", laser.getMeasurement().distance_mm);
-    SmartDashboard.putNumber("status", laser.getMeasurement().status);
+ 
 
 
     

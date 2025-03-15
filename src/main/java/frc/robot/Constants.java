@@ -39,7 +39,7 @@ public final class Constants {
     public static final int ElevatorFollower = 38;
     public static final int CoralIntakeRPM = 30;
 
-    //Constant for the ScoreCoral command to know when to stop
+    //Constant for the ScoreCoral command to know when to stop, just automatically sets to false?
     public static boolean laserDetect = false;
 
     //Buffer variable for the Driver to decide when to move elevator. Changed by operator pov pad controls
@@ -94,6 +94,9 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
+  }
+  public static class SensorConstants{
+    public static int rangerID = 14;
   }
 
   public static final class VisionConstants {

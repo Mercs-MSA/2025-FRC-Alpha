@@ -17,17 +17,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.OperatorConstants;
+import au.grapplerobotics.CanBridge;
+import au.grapplerobotics.ConfigurationFailedException;
+import au.grapplerobotics.LaserCan;
 
 
 public class Claw extends SubsystemBase {
     //Voltage motor initialized and configured here
     private CANBus fake = new CANBus("rio");
-    //private CANrange ranger = new CANrange(Constants.ClawConstants.rangerID, fake.getName());
+    private CANrange ranger = new CANrange(Constants.SensorConstants.rangerID, fake.getName());
     public TalonFX flywheel = new TalonFX(Constants.MotorConstants.Flywheelintake, fake.getName());
-     private final MotionMagicExpoVoltage clawVoltage = new MotionMagicExpoVoltage(0);
+    public static final LaserCan laser = new LaserCan(Constants.SensorConstants.rangerID);
+    private final MotionMagicExpoVoltage clawVoltage = new MotionMagicExpoVoltage(0);
 
     private static double perfectCoralPosition;
-    
+
+
 
     //Enum here to keep track of state
     public static enum CLAW_STATES {
@@ -40,6 +45,16 @@ public class Claw extends SubsystemBase {
     private static CLAW_STATES currentClawState = CLAW_STATES.STOPPED_STATE;
 
     public Claw() {
+        try {
+            laser.setRangingMode(LaserCan.RangingMode.SHORT);
+            laser.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
+            laser.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
+          } catch (ConfigurationFailedException e) {
+            System.out.println("Configuration failed! " + e);
+          }
+          CanBridge.runTCP();
+    
+    
         //ranger.getConfigurator().apply(configs);
         TalonFXConfiguration configs = new TalonFXConfiguration();
         MotionMagicConfigs motionMagicCon = configs.MotionMagic;
@@ -69,22 +84,49 @@ public class Claw extends SubsystemBase {
     }
 
     public void setPerfectPosition() {
-        perfectCoralPosition = flywheel.getPosition().getValueAsDouble() - 2;
+        perfectCoralPosition = flywheel.getPosition().getValueAsDouble() - 2.25;
     }
 
     public void runMotorToPerfectPosition() {
         //get gear ratio: 2:1, get distance: 6.25inches , get circumfrence of wheel: 2 inches,
         flywheel.setControl(clawVoltage.withPosition(perfectCoralPosition));
+
+    }
+    public boolean isAtPerfectPosition()
+    {
+        if((Math.abs(flywheel.getPosition().getValueAsDouble()-perfectCoralPosition)<.1))
+        {
+            return true;
+        }
+        return false;
+
+    }
+    
+    public  boolean isCoralInIntake() {
+        LaserCan.Measurement measurement = laser.getMeasurement();
+            //only returns true for distances equal to or less than 100mm/10cm so it shouldnt accidently be triggered
+            if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm <= 100) {
+              
+              
+              return true;
+            } else {
+              return false;
+            }
     }
 
-    public boolean isCoralAtPerfectPosition() {
-        return (Math.abs(perfectCoralPosition - flywheel.getPosition().getValueAsDouble()) <= 0.1);
-    }
+    // public boolean isCoralAtPerfectPosition() {
+       
+         
+    // }
     
 
     @Override
     public void periodic() {
         //output current state
         SmartDashboard.putNumber("Flywheel voltage: ", getVoltage());
+        SmartDashboard.putNumber("Distance to object (mm)", laser.getMeasurement().distance_mm);
+        SmartDashboard.putNumber("status", laser.getMeasurement().status);
+        SmartDashboard.putBoolean("coralIn", isCoralInIntake());
+
     }
 }

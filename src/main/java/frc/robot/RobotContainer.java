@@ -96,26 +96,8 @@ public class RobotContainer {
    * joysticks}.
    */
 
-  public void laserDetector() {
-    LaserCan.Measurement measurement = Robot.laser.getMeasurement();
-    //only returns true for distances equal to or less than 100mm/10cm so it shouldnt accidently be triggered
-    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm <= 100) {
-      MotorConstants.laserDetect = true;
-    } else {
-      MotorConstants.laserDetect = false;
-    }
-    //System.out.println(measurement.distance_mm);
-  }
 
-  public static boolean isCoralInIntake() {
-    LaserCan.Measurement measurement = Robot.laser.getMeasurement();
-    //only returns true for distances equal to or less than 100mm/10cm so it shouldnt accidently be triggered
-    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT && measurement.distance_mm <= 100) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+ 
  
   
   private void configureBindings() {
@@ -132,8 +114,8 @@ public class RobotContainer {
     //Resets elevator and pivot to bottom by control of operator
     m_operatorController.b().onTrue(new CommandToState(m_Elevator, m_Pivot, Constants.MotorConstants.AvailableState.LEVEL1));
     
-    m_operatorController.a().whileTrue(new SequentialCommandGroup(
-      new CommandIntakeFlywheels(m_claw, IntakeAction.INTAKE),
+    m_operatorController.a().onTrue(new SequentialCommandGroup(
+      new CommandIntakeFlywheels(m_claw),
       new CommandIntakeCoral(m_claw)
     ));
 
@@ -149,7 +131,7 @@ public class RobotContainer {
     //m_driverController.x().onTrue(new CommandToState(m_Elevator, m_Pivot, MotorConstants.toState));
 
     //m_operatorController.a().whileTrue(new CommandIntakeFlywheels(m_claw, IntakeAction.INTAKE)); //intakes
-    m_operatorController.y().whileTrue(new CommandIntakeFlywheels(m_claw, IntakeAction.OUTTAKE)); //expells
+    m_operatorController.y().onTrue(new CommandIntakeFlywheels(m_claw)); //expells
    
     m_operatorController.pov(0).onTrue(new SequentialCommandGroup(
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
