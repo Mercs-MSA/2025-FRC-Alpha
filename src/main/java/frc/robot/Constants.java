@@ -104,21 +104,5 @@ public final class Constants {
         public static final String limelightBackName = "limelight-back";
         public static final Vector<N3> visionStdDevs = VecBuilder.fill(.7,.7,9999999);
     }
-  
-  // public static class ClawConstants {
-  //   public static int clawMotorID = 21;
-  //   public static int rangerID = 14;
-
-  //   public enum clawState {
-  //     CORAL_INTAKING_STATE,
-  //     CORAL_SCORING_STATE,
-  //     ALGAE_INTAKING_STATE,
-  //     ALGAE_SCORING_STATE,
-  //     CORAL_HOLDING_STATE,
-  //     ALGAE_HOLDING_STATE
-  //   }
-
-  //   public static double timeforclawtorun = 0.2;
-  //   public static double clawVoltage = 6;
 
 }
