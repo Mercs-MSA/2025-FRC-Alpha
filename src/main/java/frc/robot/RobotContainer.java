@@ -122,8 +122,7 @@ public class RobotContainer {
     //m_operatorController.leftTrigger(0.8).whileTrue(new CommandScoreCoral(m_claw));
 
     //For future use with Algae
-    // m_operatorController.leftBumper().whileTrue(new CommandScoreCoral(m_claw, false));
-    // m_operatorController.rightBumper().whileTrue(new CommandScoreCoral(m_claw, true));
+     m_operatorController.rightBumper().whileTrue(new CommandPivotPos(m_Pivot, PivotConstants.Algae));
 
 
 
@@ -175,6 +174,7 @@ public class RobotContainer {
         new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
       ));
     }
+
     
   
   //m_operatorController.pov(90).onTrue(new CommandPivotPos(m_Pivot, PivotConstants.L1));
