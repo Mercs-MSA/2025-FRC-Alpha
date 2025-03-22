@@ -11,22 +11,18 @@ public class CommandScoreCoral extends Command {
     public final Claw m_claw;
     public boolean m_startstate=false;
     public boolean m_backwards;
-    public boolean m_isScore;
+    public Integer m_voltage;
 
-    public CommandScoreCoral(Claw subsystem, Boolean isScore) {
+    public CommandScoreCoral(Claw subsystem, Integer voltage) {
         addRequirements(subsystem);
         m_claw = subsystem;
-        m_isScore = isScore;
+        m_voltage = voltage;
     }
     
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        if (m_isScore) {
-            m_claw.setVoltage(-3);
-        } else {
-            m_claw.setVoltage(3);
-        }
+        m_claw.setVoltage(m_voltage);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

@@ -73,7 +73,7 @@ public class RobotContainer {
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
   private final SequentialCommandGroup l4RetractCommandGroup = new SequentialCommandGroup(      
-        new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1),
+        new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3),
         new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3),
         new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
         new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
@@ -137,13 +137,20 @@ public class RobotContainer {
 
     //For future use with Algae
      m_operatorController.rightBumper().whileTrue(new CommandPivotPos(m_Pivot, PivotConstants.Algae));
+     m_operatorController.leftBumper().onTrue(new SequentialCommandGroup(
+      // new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.AlgaeL3)
+      // new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
+
+    ));
 
 
 
 
     //m_operatorController.a().whileTrue(new CommandIntakeFlywheels(m_claw, IntakeAction.INTAKE)); //intakes
-    m_operatorController.y().whileTrue(new CommandScoreCoral(m_claw, true));
-    m_operatorController.x().whileTrue(new CommandScoreCoral(m_claw, false));
+    m_operatorController.y().whileTrue(new CommandScoreCoral(m_claw, -3)); //expell coral
+    m_operatorController.x().whileTrue(new CommandScoreCoral(m_claw, 3)); //intake coral
+    m_operatorController.b().whileTrue(new CommandScoreCoral(m_claw, 6)); //intake algae
    
     m_operatorController.pov(0).onTrue(new SequentialCommandGroup(
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
@@ -172,10 +179,10 @@ public class RobotContainer {
 
     ));
     
-    m_operatorController.pov(180).onTrue(new SequentialCommandGroup(
+    m_operatorController.pov(180).onTrue(
       //if elevator in level 4, run l4RetractCommandGroup, else run defaultRectractCommandGroup
-      Math.abs(m_Elevator.getPosition() - ElevatorConstants.L4) <= 0.25 ? l4RetractCommandGroup : defaultRetractCommandGroup
-    ));
+      /*Math.abs(m_Elevator.getPosition() - ElevatorConstants.L4) <= 0.25 ?*/ defaultRetractCommandGroup //: defaultRetractCommandGroup
+    );
     
     
   
