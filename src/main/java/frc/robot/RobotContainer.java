@@ -72,6 +72,20 @@ public class RobotContainer {
   
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+  private final SequentialCommandGroup l4RetractCommandGroup = new SequentialCommandGroup(      
+        new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1),
+        new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3),
+        new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+        new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
+        new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
+  );
+
+  private final SequentialCommandGroup defaultRetractCommandGroup = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
+  );
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -157,24 +171,12 @@ public class RobotContainer {
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
 
     ));
-    if (Math.abs(m_Elevator.getPosition() - ElevatorConstants.L4) <= 0.2) {
-      m_operatorController.pov(180).onTrue(new SequentialCommandGroup(
-        
-        new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1),
-        new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3),
-        new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
-        new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
-        new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
-      ));
-    } else {
-      m_operatorController.pov(180).onTrue(new SequentialCommandGroup(
-        
-        new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
-        new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
-        new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
-      ));
-    }
-
+    
+    m_operatorController.pov(180).onTrue(new SequentialCommandGroup(
+      //if elevator in level 4, run l4RetractCommandGroup, else run defaultRectractCommandGroup
+      Math.abs(m_Elevator.getPosition() - ElevatorConstants.L4) <= 0.25 ? l4RetractCommandGroup : defaultRetractCommandGroup
+    ));
+    
     
   
   //m_operatorController.pov(90).onTrue(new CommandPivotPos(m_Pivot, PivotConstants.L1));
