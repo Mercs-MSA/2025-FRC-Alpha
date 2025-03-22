@@ -152,6 +152,12 @@ public class RobotContainer {
       new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
 
     ));
+    m_operatorController.pov(180).onTrue(new SequentialCommandGroup(
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
+      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
+
+    ));
     if (Math.abs(m_Elevator.getPosition() - ElevatorConstants.L4) <= 0.2) {
       m_operatorController.pov(180).onTrue(new SequentialCommandGroup(
         
