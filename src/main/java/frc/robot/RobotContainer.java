@@ -30,6 +30,7 @@ import frc.robot.commands.CommandIntakeFlywheels;
 import frc.robot.commands.CommandPivotPos;
 import frc.robot.commands.CommandScoreCoral;
 import frc.robot.commands.CommandToState;
+import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.CommandSetToState;
 // import frc.robot.commands.CommandPivotPosOpposite;
 import frc.robot.commands.CommandStopCoral;
@@ -127,7 +128,7 @@ public class RobotContainer {
     //Resets elevator and pivot to bottom by control of operator
     //m_operatorController.b().onTrue(new CommandToState(m_Elevator, m_Pivot, Constants.MotorConstants.AvailableState.LEVEL1));
     
-    m_operatorController.a().onTrue(new SequentialCommandGroup(
+    m_operatorController.y().onTrue(new SequentialCommandGroup(
       new CommandIntakeFlywheels(m_claw),
       new CommandIntakeCoral(m_claw)
     ));
@@ -143,7 +144,9 @@ public class RobotContainer {
       // new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
 
     ));
-
+    m_operatorController.pov(270) //Composite command structure for L2
+    .and(m_operatorController.a())
+    .onTrue( new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2));
 
 
 
