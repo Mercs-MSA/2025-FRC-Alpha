@@ -6,14 +6,14 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.subsystems.Claw;
 
-public class CommandScoreCoral extends Command {
+public class CommandMoveFlywheels extends Command {
 
     public final Claw m_claw;
     public boolean m_startstate=false;
     public boolean m_backwards;
-    public Integer m_voltage;
+    public double m_voltage;
 
-    public CommandScoreCoral(Claw subsystem, Integer voltage) {
+    public CommandMoveFlywheels(Claw subsystem, Double voltage) {
         addRequirements(subsystem);
         m_claw = subsystem;
         m_voltage = voltage;

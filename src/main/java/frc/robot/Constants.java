@@ -79,16 +79,21 @@ public final class Constants {
     public static final double L2 = 7.45;
     public static final double L3 = 14.9;
     public static final double L4 = 28.5;
-    public static final double AlgaeL2 = 7.75;
-    public static final double AlgaeL3 = 15.8; 
+
+    public static final double ALGAE_L1 = 7.75;
+    public static final double ALGAE_L2 = 7.75;
+    public static final double ALGAE_L3 = 15.8; 
   };
   public static class PivotConstants
   {
-    public static final double L1= 0.0;
-    public static final double L2THRUL3=1.0;
-    public static final double L4=5.0;
+    public static final double L1 = 0.0;
+    public static final double L2 = 5.0;
+    public static final double L3 = 5.0;
+    public static final double L4 = 5.0;
+    public static final double L4_TRANSFER = 1.5;
     public static final double TRANSFER_POSITION = 4.5;
-    public static final double Algae = 18;
+    
+    public static final double ALGAE = 18;
     
 
     public static frc.robot.Constants.MotorConstants.AvailableState pivotState = frc.robot.Constants.MotorConstants.AvailableState.LEVEL1;

@@ -28,7 +28,7 @@ import frc.robot.commands.CommandIntakeCoral;
 import frc.robot.commands.CommandIntakeFlywheels;
 // import frc.robot.commands.CommandFreePivot;
 import frc.robot.commands.CommandPivotPos;
-import frc.robot.commands.CommandScoreCoral;
+import frc.robot.commands.CommandMoveFlywheels;
 import frc.robot.commands.CommandToState;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.CommandSetToState;
@@ -58,6 +58,7 @@ public class RobotContainer {
 
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
   private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
+  private final double MAX_FLYWHEEL_VOLTAGE = 6.0;
   
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
     .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1); // 10% deadzone
@@ -73,18 +74,57 @@ public class RobotContainer {
   
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  private final SequentialCommandGroup l4RetractCommandGroup = new SequentialCommandGroup(      
-        new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3),
+  private final SequentialCommandGroup l4RetractSequentialCommandGroup = new SequentialCommandGroup(      
+        new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4_TRANSFER),
         new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3),
         new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
         new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
         new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
   );
 
-  private final SequentialCommandGroup defaultRetractCommandGroup = new SequentialCommandGroup(    
+  private final SequentialCommandGroup SCORE_CORAL_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(
+    new CommandIntakeFlywheels(m_claw),
+    new CommandIntakeCoral(m_claw)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L1_CORAL_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
     new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
     new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
     new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L2_CORAL_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2),
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L3_CORAL_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3),
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.L3)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L4_CORAL_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4),
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
+  );
+
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L1_ALGAE_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.ALGAE),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.ALGAE_L1)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L2_ALGAE_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.ALGAE),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.ALGAE_L2)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L3_ALGAE_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.ALGAE),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.ALGAE_L3)
   );
 
 
@@ -100,101 +140,27 @@ public class RobotContainer {
     OUTTAKE
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-
-
- 
- 
-  
   private void configureBindings() {
 
-
-    //4 commands send elevator state to a buffer variable to be later called by driver
-
-
-    // m_operatorController.pov(180).onTrue(new CommandSetToState(Constants.MotorConstants.AvailableState.LEVEL1));
-    // m_operatorController.pov(270).onTrue(new CommandSetToState(Constants.MotorConstants.AvailableState.LEVEL2));
-    // m_operatorController.pov(0).onTrue(new CommandSetToState(Constants.MotorConstants.AvailableState.LEVEL3));
-    // m_operatorController.pov(90).onTrue(new CommandSetToState(Constants.MotorConstants.AvailableState.LEVEL4));
-
-    //Resets elevator and pivot to bottom by control of operator
-    //m_operatorController.b().onTrue(new CommandToState(m_Elevator, m_Pivot, Constants.MotorConstants.AvailableState.LEVEL1));
+    /* -------------------- OPERATOR CONTROLS -------------------- */
     
-    m_operatorController.y().onTrue(new SequentialCommandGroup(
-      new CommandIntakeFlywheels(m_claw),
-      new CommandIntakeCoral(m_claw)
-    ));
-
-    //Left trigger starts into. Right trigger stops, should normally need to be used to stop it after scoring
-    //m_operatorController.leftTrigger(0.8).whileTrue(new CommandScoreCoral(m_claw));
-
-    //For future use with Algae
-     m_operatorController.rightBumper().whileTrue(new CommandPivotPos(m_Pivot, PivotConstants.Algae));
-     m_operatorController.leftBumper().onTrue(new SequentialCommandGroup(
-      // new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
-      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.AlgaeL3)
-      // new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
-
-    ));
-    m_operatorController.pov(270) //Composite command structure for L2
-    .and(m_operatorController.a())
-    .onTrue( new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2));
-
-
-
-    //m_operatorController.a().whileTrue(new CommandIntakeFlywheels(m_claw, IntakeAction.INTAKE)); //intakes
-    m_operatorController.y().whileTrue(new CommandScoreCoral(m_claw, -3)); //expell coral
-    m_operatorController.x().whileTrue(new CommandScoreCoral(m_claw, 3)); //intake coral
-    m_operatorController.b().whileTrue(new CommandScoreCoral(m_claw, 6)); //intake algae
-   
-    m_operatorController.pov(0).onTrue(new SequentialCommandGroup(
-      new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
-      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4),
-      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
-
-    ));
-
-    m_operatorController.pov(270).onTrue(new SequentialCommandGroup(
-      new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
-      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2),
-      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
-
-    ));
-
-    m_operatorController.pov(90).onTrue(new SequentialCommandGroup(
-      new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
-      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3),
-      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
-
-    ));
-    m_operatorController.pov(180).onTrue(new SequentialCommandGroup(
-      new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
-      new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
-      new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
-
-    ));
+    m_operatorController.y().onTrue(SCORE_CORAL_SEQUENTIAL_COMMAND_GROUP); // y
     
-    m_operatorController.pov(180).onTrue(
-      //if elevator in level 4, run l4RetractCommandGroup, else run defaultRectractCommandGroup
-      /*Math.abs(m_Elevator.getPosition() - ElevatorConstants.L4) <= 0.25 ?*/ defaultRetractCommandGroup //: defaultRetractCommandGroup
-    );
+    m_operatorController.leftTrigger(0.2).whileTrue(new CommandMoveFlywheels(m_claw, m_operatorController.getRightTriggerAxis() * MAX_FLYWHEEL_VOLTAGE)); // left trigger
+    m_operatorController.rightTrigger(0.2).whileTrue(new CommandMoveFlywheels(m_claw, m_operatorController.getRightTriggerAxis() * -MAX_FLYWHEEL_VOLTAGE)); // right trigger
+
+    m_operatorController.pov(180).onTrue(ELEVATOR_AND_PIVOT_TO_L1_CORAL_SEQUENTIAL_COMMAND_GROUP); // down dpad
+    m_operatorController.pov(270).onTrue(ELEVATOR_AND_PIVOT_TO_L2_CORAL_SEQUENTIAL_COMMAND_GROUP); // left dpad
+    m_operatorController.pov(90).onTrue(ELEVATOR_AND_PIVOT_TO_L3_CORAL_SEQUENTIAL_COMMAND_GROUP); // right dpad
+    m_operatorController.pov(0).onTrue(ELEVATOR_AND_PIVOT_TO_L4_CORAL_SEQUENTIAL_COMMAND_GROUP); // up dpad
+
+    m_operatorController.pov(180).and(m_operatorController.a()).onTrue(ELEVATOR_AND_PIVOT_TO_L1_ALGAE_SEQUENTIAL_COMMAND_GROUP); // down dpad + a
+    m_operatorController.pov(270).and(m_operatorController.a()).onTrue(ELEVATOR_AND_PIVOT_TO_L2_ALGAE_SEQUENTIAL_COMMAND_GROUP); // left dpad + a
+    m_operatorController.pov(90).and(m_operatorController.a()).onTrue(ELEVATOR_AND_PIVOT_TO_L3_ALGAE_SEQUENTIAL_COMMAND_GROUP); // right dpad + a
     
+
+    /* -------------------- DRIVER CONTROLS -------------------- */
     
-  
-  //m_operatorController.pov(90).onTrue(new CommandPivotPos(m_Pivot, PivotConstants.L1));
-  
-   // m_operatorController.a().onTrue(new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2THRUL3,true));
-
-
-
     // Deadzone is 10%
     drivetrain.setDefaultCommand(
       // Drivetrain will execute this command periodically
@@ -203,18 +169,18 @@ public class RobotContainer {
               .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
               .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
       )
-  );
+    );
 
   
-  m_driverController.x().onTrue(new CommandToPos(drivetrain,
-   new Pose2d(drivetrain.getState().Pose.getX() + 1,
-   drivetrain.getState().Pose.getY(),
-   drivetrain.getState().Pose.getRotation()),
-   false));
+    m_driverController.x().onTrue(new CommandToPos(drivetrain,
+    new Pose2d(drivetrain.getState().Pose.getX() + 1,
+    drivetrain.getState().Pose.getY(),
+    drivetrain.getState().Pose.getRotation()),
+    false));
 
-    
-    //Seeds robot for field centric. To seed, face the robot facing the direction opposite of the driver stations then hit Y
-    m_driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric())); //Seed  
+      
+      //Seeds robot for field centric. To seed, face the robot facing the direction opposite of the driver stations then hit Y
+      m_driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric())); //Seed  
   }
 
 public void getAutonomousCommand() {
