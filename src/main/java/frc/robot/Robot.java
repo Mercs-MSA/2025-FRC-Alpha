@@ -92,6 +92,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("pivot desired position", m_robotContainer.m_Pivot.desiredPosition);
     SmartDashboard.putNumber("pivot position", m_robotContainer.m_Pivot.getPosition());
     SmartDashboard.putNumber("pivot voltage", m_robotContainer.m_Pivot.getVoltage());
+    SmartDashboard.putNumber("operator right trig", m_robotContainer.m_operatorController.getRightTriggerAxis());
+    SmartDashboard.putNumber("operator left trig", m_robotContainer.m_operatorController.getLeftTriggerAxis());
 
  
 

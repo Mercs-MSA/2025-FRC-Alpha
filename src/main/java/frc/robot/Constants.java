@@ -80,7 +80,7 @@ public final class Constants {
     public static final double L3 = 14.9;
     public static final double L4 = 28.5;
 
-    public static final double ALGAE_L1 = 7.75;
+    public static final double ALGAE_L1 = 0.0;
     public static final double ALGAE_L2 = 7.75;
     public static final double ALGAE_L3 = 15.8; 
   };

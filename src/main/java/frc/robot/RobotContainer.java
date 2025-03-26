@@ -69,7 +69,7 @@ public class RobotContainer {
   private final Claw m_claw =new Claw();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+  public final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
   private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -146,8 +146,8 @@ public class RobotContainer {
     
     m_operatorController.y().onTrue(SCORE_CORAL_SEQUENTIAL_COMMAND_GROUP); // y
     
-    m_operatorController.leftTrigger(0.2).whileTrue(new CommandMoveFlywheels(m_claw, m_operatorController.getRightTriggerAxis() * MAX_FLYWHEEL_VOLTAGE)); // left trigger
-    m_operatorController.rightTrigger(0.2).whileTrue(new CommandMoveFlywheels(m_claw, m_operatorController.getRightTriggerAxis() * -MAX_FLYWHEEL_VOLTAGE)); // right trigger
+    m_operatorController.leftTrigger().whileTrue(new CommandMoveFlywheels(m_claw,6.0 /*m_operatorController.getRightTriggerAxis() * MAX_FLYWHEEL_VOLTAGE*/)); // left trigger
+    m_operatorController.rightTrigger().whileTrue(new CommandMoveFlywheels(m_claw,-6.0 /*m_operatorController.getRightTriggerAxis() * -MAX_FLYWHEEL_VOLTAGE*/)); // right trigger
 
     m_operatorController.pov(180).onTrue(ELEVATOR_AND_PIVOT_TO_L1_CORAL_SEQUENTIAL_COMMAND_GROUP); // down dpad
     m_operatorController.pov(270).onTrue(ELEVATOR_AND_PIVOT_TO_L2_CORAL_SEQUENTIAL_COMMAND_GROUP); // left dpad
