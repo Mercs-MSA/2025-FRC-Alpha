@@ -96,7 +96,7 @@ public class RobotContainer {
     }
   }
 
-  
+  double actualVelX = 0,  actualVelY = 0, actualRot = 0;
   private void configureBindings() {
     // m_driverController.a().onTrue(new IntakeCommand(m_CoralIntake));
     // m_driverController.b().onTrue(new OuttakeCommand(m_CoralIntake));
@@ -113,14 +113,38 @@ public class RobotContainer {
 
 
     // This is the swerve control which I have taken out while we are currently
-    // testing sub systems. Deadzone is 5%
+    // testing sub systems. Deadzone is 10%
+
+    double targetVelX = -m_driverController.getLeftY()  * MaxSpeed;
+    double targetVelY = -m_driverController.getLeftX()  * MaxSpeed;
+    double targetRot = -m_driverController.getRightX() * MaxAngularRate;
+    double lateralSpeedIncrease = .1;    
+    double rotationalSpeedIncrease = Units.rotationsPerMinuteToRadiansPerSecond(5);
+    
+
+    if(actualVelX > targetVelX - .2)
+    {
+      actualVelX -= lateralSpeedIncrease;
+    } else if(actualVelX < targetVelX + .2){
+      actualVelX += lateralSpeedIncrease;
+    }
+    if(actualVelY > targetVelY + .2){
+      actualVelY -= lateralSpeedIncrease;
+    } else if(actualVelX < targetVelX - .2){
+      actualVelY += lateralSpeedIncrease;
+    }
+    if (actualRot > targetRot - 2) {
+      actualRot -= rotationalSpeedIncrease;
+    } else if (actualRot < targetRot + 2) {
+      actualRot += rotationalSpeedIncrease;
+    }
 
     drivetrain.setDefaultCommand(
       // Drivetrain will execute this command periodically
       drivetrain.applyRequest(() ->
-          drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-              .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-              .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+          drive.withVelocityX(actualVelX) // Drive forward with negative Y (forward)
+              .withVelocityY(actualVelY) // Drive left with negative X (left)
+              .withRotationalRate(actualRot) // Drive counterclockwise with negative X (left)
       )
   );
 
