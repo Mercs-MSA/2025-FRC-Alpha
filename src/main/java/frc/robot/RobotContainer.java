@@ -57,8 +57,8 @@ public class RobotContainer {
   // private final CoralIntake m_CoralIntake = new CoralIntake();
   // private final IntakeCommand m_IntakeCommand= new IntakeCommand(m_CoralIntake);
 
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude() / 2;
-  private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0) / 2;
+  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude() / 5;
+  private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(10);
   private final double MAX_FLYWHEEL_VOLTAGE = 6.0;
   private double actualVelX = 0, actualVelY = 0, actualRot = 0;
 
@@ -149,15 +149,24 @@ public class RobotContainer {
     double targetVelX = -m_driverController.getLeftY()  * MaxSpeed;
     double targetVelY = -m_driverController.getLeftX()  * MaxSpeed;
     double targetRot = -m_driverController.getRightX() * MaxAngularRate;
-    double lateralSpeedIncrease = 3;    
+    double lateralSpeedIncrease = .011;    
     double rotationalSpeedIncrease = Units.rotationsPerMinuteToRadiansPerSecond(5);
     
-
+    if(actualVelX < .2 * MaxSpeed && actualVelX > -.2 * MaxSpeed){
+      actualVelX = 0;
+    }
+    if(actualVelY < .2 * MaxSpeed && actualVelY > -.2 * MaxSpeed){
+      actualVelY = 0;
+    }
+    if(actualRot < .2 * MaxAngularRate && actualRot > -.2 * MaxAngularRate){
+      actualRot = 0;
+    }
     
     System.out.println("Target" + targetVelX + " " + targetVelY + " " + targetRot);
     System.out.println("Actual before Incrementing" + actualVelX + " " + actualVelY + " " + actualRot);
     
-    if(actualVelX <= targetVelX + 2 && actualVelX >= targetVelX - 2){
+    if(!(actualVelX <= targetVelX + .4 && actualVelX >= targetVelX - .4)){
+      System.out.println(" X is incrementing");
     if(actualVelX > targetVelX)
       {
         actualVelX -= lateralSpeedIncrease;
@@ -165,31 +174,24 @@ public class RobotContainer {
         actualVelX += lateralSpeedIncrease;
       }
     }
-    if(actualVelY <= targetVelY + 2 && actualVelY >= targetVelY - 2){
+    if(!(actualVelY <= targetVelY + .4 && actualVelY >= targetVelY - .4)){
+      System.out.println(" Y is incrementing");
     if(actualVelY > targetVelY ){
       actualVelY -= lateralSpeedIncrease;
     } else if(actualVelX < targetVelX){
       actualVelY += lateralSpeedIncrease;
     }}
-    if(actualRot <= actualRot + 2 && actualRot >= actualRot- 2){
+    if(!(actualRot <= actualRot + 2 && actualRot >= actualRot- 2)){
+      System.out.println(" Rot is incrementing");
     if (actualRot > targetRot) {
       actualRot -= rotationalSpeedIncrease;
     } else if (actualRot < targetRot) {
       actualRot += rotationalSpeedIncrease;
     }
   }
-  System.out.println("Target before 0" + targetVelX + " " + targetVelY + " " + targetRot);
-    System.out.println("Actual befire 0" + actualVelX + " " + actualVelY + " " + actualRot);
 
-  if(targetVelX < .2 * MaxSpeed && targetVelX > -.2 * MaxSpeed){
-    actualVelX = 0;
-  }
-  if(targetVelY < .2 * MaxSpeed && targetVelY > -.2 * MaxSpeed){
-    actualVelY = 0;
-  }
-  if(targetRot < .2 * MaxAngularRate && targetRot > -.2 * MaxAngularRate){
-    actualRot = 0;
-  }
+
+  
 
     System.out.println("Target" + targetVelX + " " + targetVelY + " " + targetRot);
     System.out.println("Actual" + actualVelX + " " + actualVelY + " " + actualRot);
@@ -201,14 +203,14 @@ public class RobotContainer {
 
   
 
-  //   drivetrain.setDefaultCommand(
-  //     // Drivetrain will execute this command periodically
-  //     drivetrain.applyRequest(() ->
-  //         drive.withVelocityX(actualVelX)
-  //             .withVelocityY(actualVelY) 
-  //             .withRotationalRate(actualRot) 
-  //     )
-  // );
+    drivetrain.setDefaultCommand(
+      // Drivetrain will execute this command periodically
+      drivetrain.applyRequest(() ->
+          drive.withVelocityX(actualVelX)
+              .withVelocityY(actualVelY) 
+              .withRotationalRate(actualRot) 
+      )
+  );
   };
 
 
@@ -248,8 +250,7 @@ public class RobotContainer {
 
   
     m_driverController.x().onTrue(new CommandToPos(drivetrain,
-    new Pose2d(drivetrain.getState().Pose.getX() + 1,
-    drivetrain.getState().Pose.getY(),
+    new Pose2d(2,2,
     drivetrain.getState().Pose.getRotation()),
     false));
 
