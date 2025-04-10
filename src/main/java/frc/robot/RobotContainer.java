@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import au.grapplerobotics.LaserCan;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -56,9 +57,11 @@ public class RobotContainer {
   // private final CoralIntake m_CoralIntake = new CoralIntake();
   // private final IntakeCommand m_IntakeCommand= new IntakeCommand(m_CoralIntake);
 
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
-  private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
+  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude() / 2;
+  private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0) / 2;
   private final double MAX_FLYWHEEL_VOLTAGE = 6.0;
+  private double actualVelX = 0, actualVelY = 0, actualRot = 0;
+
   
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
     .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1); // 10% deadzone
@@ -133,12 +136,81 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     
+
+    
   }
 
   public enum IntakeAction {
     INTAKE,
     OUTTAKE
   }
+
+  public void drivetrainControl(){
+    double targetVelX = -m_driverController.getLeftY()  * MaxSpeed;
+    double targetVelY = -m_driverController.getLeftX()  * MaxSpeed;
+    double targetRot = -m_driverController.getRightX() * MaxAngularRate;
+    double lateralSpeedIncrease = 3;    
+    double rotationalSpeedIncrease = Units.rotationsPerMinuteToRadiansPerSecond(5);
+    
+
+    
+    System.out.println("Target" + targetVelX + " " + targetVelY + " " + targetRot);
+    System.out.println("Actual before Incrementing" + actualVelX + " " + actualVelY + " " + actualRot);
+    
+    if(actualVelX <= targetVelX + 2 && actualVelX >= targetVelX - 2){
+    if(actualVelX > targetVelX)
+      {
+        actualVelX -= lateralSpeedIncrease;
+      } else if(actualVelX < targetVelX){
+        actualVelX += lateralSpeedIncrease;
+      }
+    }
+    if(actualVelY <= targetVelY + 2 && actualVelY >= targetVelY - 2){
+    if(actualVelY > targetVelY ){
+      actualVelY -= lateralSpeedIncrease;
+    } else if(actualVelX < targetVelX){
+      actualVelY += lateralSpeedIncrease;
+    }}
+    if(actualRot <= actualRot + 2 && actualRot >= actualRot- 2){
+    if (actualRot > targetRot) {
+      actualRot -= rotationalSpeedIncrease;
+    } else if (actualRot < targetRot) {
+      actualRot += rotationalSpeedIncrease;
+    }
+  }
+  System.out.println("Target before 0" + targetVelX + " " + targetVelY + " " + targetRot);
+    System.out.println("Actual befire 0" + actualVelX + " " + actualVelY + " " + actualRot);
+
+  if(targetVelX < .2 * MaxSpeed && targetVelX > -.2 * MaxSpeed){
+    actualVelX = 0;
+  }
+  if(targetVelY < .2 * MaxSpeed && targetVelY > -.2 * MaxSpeed){
+    actualVelY = 0;
+  }
+  if(targetRot < .2 * MaxAngularRate && targetRot > -.2 * MaxAngularRate){
+    actualRot = 0;
+  }
+
+    System.out.println("Target" + targetVelX + " " + targetVelY + " " + targetRot);
+    System.out.println("Actual" + actualVelX + " " + actualVelY + " " + actualRot);
+
+    double[] arr = {targetVelX, targetVelY, targetRot, actualVelX, actualVelY, actualRot};
+
+    SmartDashboard.putNumberArray("Values", arr);
+
+
+  
+
+  //   drivetrain.setDefaultCommand(
+  //     // Drivetrain will execute this command periodically
+  //     drivetrain.applyRequest(() ->
+  //         drive.withVelocityX(actualVelX)
+  //             .withVelocityY(actualVelY) 
+  //             .withRotationalRate(actualRot) 
+  //     )
+  // );
+  };
+
 
   private void configureBindings() {
 
@@ -162,14 +234,17 @@ public class RobotContainer {
     /* -------------------- DRIVER CONTROLS -------------------- */
     
     // Deadzone is 10%
-    drivetrain.setDefaultCommand(
-      // Drivetrain will execute this command periodically
-      drivetrain.applyRequest(() ->
-          drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-              .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-              .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-      )
-    );
+    // drivetrain.setDefaultCommand(
+    //   // Drivetrain will execute this command periodically
+    //   drivetrain.applyRequest(() ->
+    //       drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+    //           .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+    //           .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+    //   )
+    // );
+
+    
+    
 
   
     m_driverController.x().onTrue(new CommandToPos(drivetrain,

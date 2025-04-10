@@ -5,13 +5,19 @@
 package frc.robot;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.generated.TunerConstants;
+import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import au.grapplerobotics.CanBridge;
 import au.grapplerobotics.ConfigurationFailedException;
@@ -30,6 +36,15 @@ public class Robot extends TimedRobot {
 
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
 
+  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
+  private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
+
+  private CommandXboxController  m_driverController = new CommandXboxController(0);
+  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1); // 10% deadzone
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -62,7 +77,7 @@ public class Robot extends TimedRobot {
     if(mt2.tagCount == 0)
     {
       doRejectUpdate = true;
-      System.out.println("No tags");
+     
     }
     if(!doRejectUpdate)
     {
@@ -76,6 +91,7 @@ public class Robot extends TimedRobot {
 
 
     }
+
 
     
     SmartDashboard.putNumberArray("Odom Pose", arr);
@@ -141,9 +157,13 @@ public class Robot extends TimedRobot {
     }
   }
 
+
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {};
+  public void teleopPeriodic() {
+    m_robotContainer.drivetrainControl();
+  }
+    
 
   @Override
   public void testInit() {
