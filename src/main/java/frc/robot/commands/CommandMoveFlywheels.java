@@ -2,24 +2,27 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.subsystems.Claw;
 
-public class CommandScoreCoral extends Command {
+public class CommandMoveFlywheels extends Command {
 
     public final Claw m_claw;
-    public boolean startstate;
+    public boolean m_startstate=false;
+    public boolean m_backwards;
+    public double m_voltage;
 
-    public CommandScoreCoral(Claw subsystem) {
+    public CommandMoveFlywheels(Claw subsystem, Double voltage) {
         addRequirements(subsystem);
         m_claw = subsystem;
+        m_voltage = voltage;
     }
     
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_claw.setVoltage(-4);
-        startstate = MotorConstants.laserDetect;
+        m_claw.setVoltage(m_voltage);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -36,12 +39,7 @@ public class CommandScoreCoral extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (MotorConstants.laserDetect && startstate == false)
-        {
-            m_claw.setVoltage(0);
-            System.out.println("Coral There");
-            return true;
-        }
         return false;
+
     }
 }

@@ -5,11 +5,20 @@
 package frc.robot;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.generated.TunerConstants;
+import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
 import au.grapplerobotics.CanBridge;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
@@ -23,8 +32,19 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+  //private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
+
   private final ADIS16470_IMU m_gyro = new ADIS16470_IMU(); // change this
-  public static final LaserCan laser = new LaserCan(14);
+
+  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
+  private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
+
+  private CommandXboxController  m_driverController = new CommandXboxController(0);
+  public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1); // 10% deadzone
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,14 +54,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    try {
-      laser.setRangingMode(LaserCan.RangingMode.SHORT);
-      laser.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
-      laser.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
-    } catch (ConfigurationFailedException e) {
-      System.out.println("Configuration failed! " + e);
-    }
-    CanBridge.runTCP();
+
   }
 
   /**
@@ -53,37 +66,57 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-      boolean doRejectUpdate = false;
+    boolean doRejectUpdate = false;
+    double[] arr = {m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(),  m_robotContainer.drivetrain.getState().Pose.getX(), m_robotContainer.drivetrain.getState().Pose.getY()};
+    LimelightHelpers.SetRobotOrientation("limelight-alpha", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-alpha");
+    if(Math.abs(m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
+    {
+      doRejectUpdate = true;
+    }
+    if(mt2.tagCount == 0)
+    {
+      doRejectUpdate = true;
+     
+    }
+    if(!doRejectUpdate)
+    {
+      m_robotContainer.drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+      m_robotContainer.drivetrain.addVisionMeasurement(
+          mt2.pose,
+          Utils.fpgaToCurrentTime(mt2.timestampSeconds)); 
+      System.out.println("Limelight Updated");
+      System.out.println(arr);
+      System.out.println("to" + mt2.pose.getX() +" " + mt2.pose.getY() + "" + mt2.pose.getRotation().getDegrees());
 
-      LimelightHelpers.SetRobotOrientation("limelight", m_robotContainer.drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-      
-      SmartDashboard.putNumber("Elevator Position", m_robotContainer.m_Elevator.getPosition());
-     // SmartDashboard.putNumber("Pivot Position", m_robotContainer.m_Pivot.getPositionPivot());
-      /* LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-      if(Math.abs(m_gyro.getRate()) > 720) // if our angular velocity is greater than 720 degrees per second, ignore vision updates
-      {
-        doRejectUpdate = true;
-      }
-      if(mt2.tagCount == 0)
-      {
-        doRejectUpdate = true;
-      }
-      if(!doRejectUpdate)
-      {
-        m_robotContainer.drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-        m_robotContainer.drivetrain.addVisionMeasurement(
-            mt2.pose,
-            mt2.timestampSeconds); */
-      //}
+
+    }
+
+
+    
+    SmartDashboard.putNumberArray("Odom Pose", arr);
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     
-    m_robotContainer.laserDetector();
+    SmartDashboard.putNumber("elevator command", m_robotContainer.m_Elevator.m_elevator_command);
+    SmartDashboard.putNumber("elevator position", m_robotContainer.m_Elevator.getPosition());
+    SmartDashboard.putNumber("elevator voltage", m_robotContainer.m_Elevator.getVoltage());
 
-    //SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);
+    SmartDashboard.putNumber("pivot desired position", m_robotContainer.m_Pivot.desiredPosition);
+    SmartDashboard.putNumber("pivot position", m_robotContainer.m_Pivot.getPosition());
+    SmartDashboard.putNumber("pivot voltage", m_robotContainer.m_Pivot.getVoltage());
+    SmartDashboard.putNumber("operator right trig", m_robotContainer.m_operatorController.getRightTriggerAxis());
+    SmartDashboard.putNumber("operator left trig", m_robotContainer.m_operatorController.getLeftTriggerAxis());
+
+ 
+
+
+    
+
+    // SmartDashboard.putBoolean("Test Laser Delete", m_robotContainer.laserDetect);
 
     CommandScheduler.getInstance().run();
   }
@@ -103,10 +136,10 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    // // schedule the autonomous command (example)
+    // if (m_autonomousCommand != null) {
+    //   m_autonomousCommand.schedule();
+    // }
   }
 
   /** This function is called periodically during autonomous. */
@@ -124,9 +157,13 @@ public class Robot extends TimedRobot {
     }
   }
 
+
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {};
+  public void teleopPeriodic() {
+    m_robotContainer.drivetrainControl();
+  }
+    
 
   @Override
   public void testInit() {

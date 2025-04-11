@@ -4,43 +4,52 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.CommandGroups;
+import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class scoreL1 extends Command {
+public class CommandIntakeCoral extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final CommandGroups m_commandgroups;
+  private final Claw m_claw;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public scoreL1(CommandGroups commandgroups) {
-    m_commandgroups = commandgroups;
+  public CommandIntakeCoral(Claw claw) {
+    m_claw = claw;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(commandgroups);
+    addRequirements(m_claw);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_commandgroups.scoreL1();
+    m_claw.setPerfectPosition();
+    m_claw.runMotorToPerfectPosition();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
+    if(m_claw.isAtPerfectPosition())
+    {
     return true;
   }
-}
+  return false;
+}}

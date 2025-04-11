@@ -10,26 +10,32 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import au.grapplerobotics.LaserCan;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ElevatorConstants;
 //import frc.robot.Constants.MotorConstants.AvailableState;
 import frc.robot.Constants.MotorConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.PivotConstants;
 import frc.robot.commands.CommandCoral;
+import frc.robot.commands.CommandElevelatorMoveToPos;
 import frc.robot.commands.CommandElevelatorPos;
-//import frc.robot.commands.CommandCollectCoral;
-import frc.robot.commands.CommandScoreCoral;
+import frc.robot.commands.CommandIntakeCoral;
+import frc.robot.commands.CommandIntakeFlywheels;
+// import frc.robot.commands.CommandFreePivot;
 import frc.robot.commands.CommandPivotPos;
-//import frc.robot.commands.CommandSetState;
-import frc.robot.commands.CommandPivotPos;
-import frc.robot.commands.CommandPivotPos;
-//import frc.robot.commands.CommandScoreState;
-import frc.robot.commands.CommandPivotPosOpposite;
+import frc.robot.commands.CommandMoveFlywheels;
+import frc.robot.commands.CommandToState;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.CommandSetToState;
+// import frc.robot.commands.CommandPivotPosOpposite;
 import frc.robot.commands.CommandStopCoral;
-import frc.robot.commands.scoreL1;
-import frc.robot.commands.scoreL2;
+import frc.robot.commands.CommandToPos;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Coral;
@@ -37,7 +43,6 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Pivot;
 import frc.robot.subsystems.Claw;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.CommandGroups;
 
 
 /**
@@ -52,25 +57,78 @@ public class RobotContainer {
   // private final CoralIntake m_CoralIntake = new CoralIntake();
   // private final IntakeCommand m_IntakeCommand= new IntakeCommand(m_CoralIntake);
 
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude();
-  private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(45.0);
+  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.magnitude() / 5;
+  private double MaxAngularRate = Units.rotationsPerMinuteToRadiansPerSecond(10);
+  private final double MAX_FLYWHEEL_VOLTAGE = 6.0;
+  private double actualVelX = 0, actualVelY = 0, actualRot = 0;
+
   
-  private final SwerveRequest.RobotCentric drive = new SwerveRequest.RobotCentric()
-    .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05); // 5% deadzone
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+    .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1); // 10% deadzone
   
   public final Coral m_coral = new Coral();
   public final Elevator m_Elevator = new Elevator();
-  private final Pivot m_Pivot = new Pivot();
+  public final Pivot m_Pivot = new Pivot();
   private final Claw m_claw =new Claw();
-  private final CommandGroups m_commandgroups=new CommandGroups();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  public final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+  private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
   
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
+  private final SequentialCommandGroup l4RetractSequentialCommandGroup = new SequentialCommandGroup(      
+        new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4_TRANSFER),
+        new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3),
+        new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+        new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
+        new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
+  );
+
+  private final SequentialCommandGroup SCORE_CORAL_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(
+    new CommandIntakeFlywheels(m_claw),
+    new CommandIntakeCoral(m_claw)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L1_CORAL_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L1),
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.L1)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L2_CORAL_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L2),
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.L2)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L3_CORAL_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L3),
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.L3)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L4_CORAL_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.TRANSFER_POSITION),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.L4),
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.L4)
+  );
+
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L1_ALGAE_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.ALGAE),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.ALGAE_L1)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L2_ALGAE_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.ALGAE),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.ALGAE_L2)
+  );
+
+  private final SequentialCommandGroup ELEVATOR_AND_PIVOT_TO_L3_ALGAE_SEQUENTIAL_COMMAND_GROUP = new SequentialCommandGroup(    
+    new CommandPivotPos(m_Pivot, Constants.PivotConstants.ALGAE),
+    new CommandElevelatorMoveToPos(m_Elevator, ElevatorConstants.ALGAE_L3)
+  );
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -78,78 +136,132 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     
+
+    
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
+  public enum IntakeAction {
+    INTAKE,
+    OUTTAKE
+  }
 
-  public void laserDetector() {
-    LaserCan.Measurement measurement = Robot.laser.getMeasurement();
-    if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-      System.out.println("coral here");
-      MotorConstants.laserDetect = true;
-    } else {
-      //System.out.println("coral not here");
-      MotorConstants.laserDetect = false;
+  public void drivetrainControl(){
+    double targetVelX = -m_driverController.getLeftY()  * MaxSpeed;
+    double targetVelY = -m_driverController.getLeftX()  * MaxSpeed;
+    double targetRot = -m_driverController.getRightX() * MaxAngularRate;
+    double lateralSpeedIncrease = .011;    
+    double rotationalSpeedIncrease = Units.rotationsPerMinuteToRadiansPerSecond(5);
+    
+    if(actualVelX < .2 * MaxSpeed && actualVelX > -.2 * MaxSpeed){
+      actualVelX = 0;
     }
-    //System.out.println(measurement.distance_mm);
+    if(actualVelY < .2 * MaxSpeed && actualVelY > -.2 * MaxSpeed){
+      actualVelY = 0;
+    }
+    if(actualRot < .2 * MaxAngularRate && actualRot > -.2 * MaxAngularRate){
+      actualRot = 0;
+    }
+    
+    System.out.println("Target" + targetVelX + " " + targetVelY + " " + targetRot);
+    System.out.println("Actual before Incrementing" + actualVelX + " " + actualVelY + " " + actualRot);
+    
+    if(!(actualVelX <= targetVelX + .4 && actualVelX >= targetVelX - .4)){
+      System.out.println(" X is incrementing");
+    if(actualVelX > targetVelX)
+      {
+        actualVelX -= lateralSpeedIncrease;
+      } else if(actualVelX < targetVelX){
+        actualVelX += lateralSpeedIncrease;
+      }
+    }
+    if(!(actualVelY <= targetVelY + .4 && actualVelY >= targetVelY - .4)){
+      System.out.println(" Y is incrementing");
+    if(actualVelY > targetVelY ){
+      actualVelY -= lateralSpeedIncrease;
+    } else if(actualVelX < targetVelX){
+      actualVelY += lateralSpeedIncrease;
+    }}
+    if(!(actualRot <= actualRot + 2 && actualRot >= actualRot- 2)){
+      System.out.println(" Rot is incrementing");
+    if (actualRot > targetRot) {
+      actualRot -= rotationalSpeedIncrease;
+    } else if (actualRot < targetRot) {
+      actualRot += rotationalSpeedIncrease;
+    }
   }
+
 
   
-  private void configureBindings() {
-    // m_driverController.a().onTrue(new IntakeCommand(m_CoralIntake));
-    // m_driverController.b().onTrue(new OuttakeCommand(m_CoralIntake));
-    // m_driverController.x().onTrue(new FlipIntakeCommand(m_CoralIntake));
+
+    System.out.println("Target" + targetVelX + " " + targetVelY + " " + targetRot);
+    System.out.println("Actual" + actualVelX + " " + actualVelY + " " + actualRot);
+
+    double[] arr = {targetVelX, targetVelY, targetRot, actualVelX, actualVelY, actualRot};
+
+    SmartDashboard.putNumberArray("Values", arr);
 
 
-   // m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
-   // m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, 0.8));
-
-    m_driverController.pov(0).whileTrue(new CommandElevelatorPos(m_Elevator, 0.25));
-    m_driverController.pov(90).whileTrue(new CommandElevelatorPos(m_Elevator, 5.4545));
-    m_driverController.pov(180).whileTrue(new CommandElevelatorPos(m_Elevator, 12.9038));
-    m_driverController.pov(270).whileTrue(new CommandElevelatorPos(m_Elevator, 25.7461));
-    m_driverController.x().whileTrue(new CommandPivotPosOpposite(m_Pivot, 0.0));
-    m_driverController.y().whileTrue(new CommandPivotPosOpposite(m_Pivot, 2.84));
-    //m_driverController.a().onTrue(new CommandScoreCoral(m_claw));
-    m_driverController.b().whileTrue(new scoreL1(m_commandgroups));
-    m_driverController.a().whileTrue(new scoreL2(m_commandgroups));
-
-    //m_driverController.b().onTrue(new CommandStopCoral(m_claw));
-
-
-
-    // This is the swerve control which I have taken out while we are currently
-    // testing sub systems. Deadzone is 5%
+  
 
     drivetrain.setDefaultCommand(
       // Drivetrain will execute this command periodically
       drivetrain.applyRequest(() ->
-          drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-              .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-              .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+          drive.withVelocityX(actualVelX)
+              .withVelocityY(actualVelY) 
+              .withRotationalRate(actualRot) 
       )
   );
+  };
+
+
+  private void configureBindings() {
+
+    /* -------------------- OPERATOR CONTROLS -------------------- */
+    
+    m_operatorController.y().onTrue(SCORE_CORAL_SEQUENTIAL_COMMAND_GROUP); // y
+    
+    m_operatorController.leftTrigger().whileTrue(new CommandMoveFlywheels(m_claw,6.0 /*m_operatorController.getRightTriggerAxis() * MAX_FLYWHEEL_VOLTAGE*/)); // left trigger
+    m_operatorController.rightTrigger().whileTrue(new CommandMoveFlywheels(m_claw,-6.0 /*m_operatorController.getRightTriggerAxis() * -MAX_FLYWHEEL_VOLTAGE*/)); // right trigger
+
+    m_operatorController.pov(180).onTrue(ELEVATOR_AND_PIVOT_TO_L1_CORAL_SEQUENTIAL_COMMAND_GROUP); // down dpad
+    m_operatorController.pov(270).onTrue(ELEVATOR_AND_PIVOT_TO_L2_CORAL_SEQUENTIAL_COMMAND_GROUP); // left dpad
+    m_operatorController.pov(90).onTrue(ELEVATOR_AND_PIVOT_TO_L3_CORAL_SEQUENTIAL_COMMAND_GROUP); // right dpad
+    m_operatorController.pov(0).onTrue(ELEVATOR_AND_PIVOT_TO_L4_CORAL_SEQUENTIAL_COMMAND_GROUP); // up dpad
+
+    m_operatorController.pov(180).and(m_operatorController.a()).onTrue(ELEVATOR_AND_PIVOT_TO_L1_ALGAE_SEQUENTIAL_COMMAND_GROUP); // down dpad + a
+    m_operatorController.pov(270).and(m_operatorController.a()).onTrue(ELEVATOR_AND_PIVOT_TO_L2_ALGAE_SEQUENTIAL_COMMAND_GROUP); // left dpad + a
+    m_operatorController.pov(90).and(m_operatorController.a()).onTrue(ELEVATOR_AND_PIVOT_TO_L3_ALGAE_SEQUENTIAL_COMMAND_GROUP); // right dpad + a
+    
+
+    /* -------------------- DRIVER CONTROLS -------------------- */
+    
+    // Deadzone is 10%
+    // drivetrain.setDefaultCommand(
+    //   // Drivetrain will execute this command periodically
+    //   drivetrain.applyRequest(() ->
+    //       drive.withVelocityX(-m_driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+    //           .withVelocityY(-m_driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+    //           .withRotationalRate(-m_driverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+    //   )
+    // );
 
     
-    // m_driverController.x().whileTrue(new CommandPivotPos(m_Pivot, 5.0));
-    // m_driverController.x().whileFalse(new CommandPivotPos(m_Pivot, 0.0));
+    
 
-    
-    m_driverController.y().whileTrue(new CommandCoral(m_coral, -1));
-    m_driverController.b().whileTrue(new CommandCoral(m_coral, 1));  
-    
-    //Pivot 0 position = intake position
-    //Pivot 2.8442 position = L2/L3
-    //Pivot 5.00 position = L4
+  
+    m_driverController.x().onTrue(new CommandToPos(drivetrain,
+    new Pose2d(2,2,
+    drivetrain.getState().Pose.getRotation()),
+    false));
+
+      
+      //Seeds robot for field centric. To seed, face the robot facing the direction opposite of the driver stations then hit Y
+      m_driverController.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric())); //Seed  
   }
+
+public void getAutonomousCommand() {
+
+}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
